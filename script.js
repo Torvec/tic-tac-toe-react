@@ -6,18 +6,18 @@ class GameCell {
     this.height = height;
     this.state = " ";
   }
-  isMouseOver(mouse) {
+  isPointerOver(pointer) {
     return (
-      mouse.x >= this.x &&
-      mouse.x <= this.x + this.width &&
-      mouse.y >= this.y &&
-      mouse.y <= this.y + this.height
+      pointer.x >= this.x &&
+      pointer.x <= this.x + this.width &&
+      pointer.y >= this.y &&
+      pointer.y <= this.y + this.height
     );
   }
   changeState(newState) {
     if (this.state === " ") this.state = newState;
   }
-  draw(c) {
+  draw() {
     c.fillStyle = "black";
     c.lineWidth = 2;
     c.strokeRect(this.x, this.y, this.width, this.height);
@@ -55,15 +55,15 @@ class GameGrid {
       }
     }
   }
-  draw(c) {
-    this.cells.forEach((cell) => cell.draw(c));
+  draw() {
+    this.cells.forEach((cell) => cell.draw());
   }
 }
 
 class InputHandler {
   constructor(game) {
     this.game = game;
-    this.mouse = {
+    this.pointer = {
       x: 0,
       y: 0,
       width: 1,
@@ -71,25 +71,24 @@ class InputHandler {
     };
     canvas.addEventListener("click", (event) => {
       const rect = canvas.getBoundingClientRect();
-      this.mouse.x = event.clientX - rect.left;
-      this.mouse.y = event.clientY - rect.top;
+      this.pointer.x = event.clientX - rect.left;
+      this.pointer.y = event.clientY - rect.top;
       this.game.handleClick();
     });
     canvas.addEventListener("touchstart", (event) => {
       const rect = canvas.getBoundingClientRect();
       const touch = event.touches[0];
-      this.mouse.x = touch.clientX - rect.left;
-      this.mouse.y = touch.clientY - rect.top;
+      this.pointer.x = touch.clientX - rect.left;
+      this.pointer.y = touch.clientY - rect.top;
       this.game.handleClick();
     });
   }
 }
 
 class Game {
-  constructor(canvas) {
-    this.canvas = canvas;
-    this.width = this.canvas.width;
-    this.height = this.canvas.height;
+  constructor() {
+    this.width = canvas.width;
+    this.height = canvas.height;
     this.players = ["X", "O"];
     this.currentPlayer =
       Math.random() <= 0.5 ? this.players[0] : this.players[1];
@@ -99,12 +98,13 @@ class Game {
     this.gameGrid = new GameGrid(this, 0, 0, this.width, this.height, 3, 3);
   }
   changeCurrentPlayer() {
-    if (this.currentPlayer === "X") this.currentPlayer = "O";
-    else this.currentPlayer = "X";
+    if (this.currentPlayer === this.players[0])
+      this.currentPlayer = this.players[1];
+    else this.currentPlayer = this.players[0];
   }
   handleClick() {
     this.gameGrid.cells.forEach((cell) => {
-      if (cell.isMouseOver(this.input.mouse) && cell.state === " ") {
+      if (cell.isPointerOver(this.input.pointer) && cell.state === " ") {
         cell.changeState(this.currentPlayer);
         this.changeCurrentPlayer();
       }
