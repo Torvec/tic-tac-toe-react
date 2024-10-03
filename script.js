@@ -96,6 +96,8 @@ class Game {
     this.cellState = " ";
     this.cellStates = [" ", "X", "O"];
     this.gameGrid = new GameGrid(this, 0, 0, this.width, this.height, 3, 3);
+    this.gameWon = false;
+    this.gameDraw = false;
   }
   changeCurrentPlayer() {
     if (this.currentPlayer === this.players[0])
@@ -104,11 +106,45 @@ class Game {
   }
   handleClick() {
     this.gameGrid.cells.forEach((cell) => {
-      if (cell.isPointerOver(this.input.pointer) && cell.state === " ") {
+      if (
+        cell.isPointerOver(this.input.pointer) &&
+        cell.state === " " &&
+        !this.gameWon
+      ) {
         cell.changeState(this.currentPlayer);
+        if (this.checkWinCondition()) {
+          this.gameWon = true;
+          return;
+        }
         this.changeCurrentPlayer();
       }
     });
+  }
+  checkWinCondition() {
+    const winningCombinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    for (let combination of winningCombinations) {
+      if (
+        this.gameGrid.cells[combination[0]].state ===
+          this.gameGrid.cells[combination[1]].state &&
+        this.gameGrid.cells[combination[1]].state ===
+          this.gameGrid.cells[combination[2]].state &&
+        this.gameGrid.cells[combination[0]].state !== " "
+      ) {
+        return true;
+      }
+    }
+  }
+  checkDrawCondition() {
+    return this.gameGrid.cells.every((cell) => cell.state !== " ");
   }
   draw() {
     c.fillStyle = "black";
@@ -120,6 +156,17 @@ class Game {
       this.width * 0.5,
       this.height * 0.05
     );
+    if (this.checkWinCondition()) {
+      this.gameWon = true;
+      c.fillText(
+        this.currentPlayer + " has won!",
+        this.width * 0.5,
+        this.height * 0.95
+      );
+    } else if (this.checkDrawCondition()) {
+      this.gameDraw = true;
+      c.fillText("It's a draw!", this.width * 0.5, this.height * 0.95);
+    }
     this.gameGrid.draw(c);
   }
 }
