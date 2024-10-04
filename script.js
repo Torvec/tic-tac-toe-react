@@ -132,13 +132,11 @@ class Game {
       [2, 4, 6],
     ];
     for (let combination of winningCombinations) {
-      if (
-        this.gameGrid.cells[combination[0]].state ===
-          this.gameGrid.cells[combination[1]].state &&
-        this.gameGrid.cells[combination[1]].state ===
-          this.gameGrid.cells[combination[2]].state &&
-        this.gameGrid.cells[combination[0]].state !== " "
-      ) {
+      const [a, b, c] = combination;
+      const cellA = this.gameGrid.cells[a].state;
+      const cellB = this.gameGrid.cells[b].state;
+      const cellC = this.gameGrid.cells[c].state;
+      if (cellA === cellB && cellB === cellC && cellA !== " ") {
         return true;
       }
     }
