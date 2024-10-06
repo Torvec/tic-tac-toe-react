@@ -4,6 +4,33 @@
 // TODO: Also need to make sure the previous grid's state is changed to unplayable but only if the next grid is playable
 // TODO: Also need to be able to set EVERY available grid to playable if the player can play anywhere
 
+class InputHandler {
+  constructor(game) {
+    this.game = game;
+    this.pointer = {
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+    };
+    canvas.addEventListener("click", (e) => this.handleClickEvent(e));
+    canvas.addEventListener("touchstart", (e) => this.handleTouchStartEvent(e));
+  }
+  handleClickEvent(e) {
+    const rect = canvas.getBoundingClientRect();
+    this.pointer.x = e.clientX - rect.left;
+    this.pointer.y = e.clientY - rect.top;
+    this.game.gameBoard.handleClick();
+  }
+  handleTouchStartEvent(e) {
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    this.pointer.x = touch.clientX - rect.left;
+    this.pointer.y = touch.clientY - rect.top;
+    this.game.gameBoard.handleClick();
+  }
+}
+
 class GameCell {
   constructor({ x, y, width, height }) {
     this.x = x;
@@ -11,6 +38,9 @@ class GameCell {
     this.width = width;
     this.height = height;
     this.states = { empty: " ", hovered: "", x: "X", o: "O" };
+    this.init();
+  }
+  init() {
     this.currentState = this.states.empty;
   }
   isPointerOver(pointer) {
@@ -50,6 +80,9 @@ class GameGrid {
       wonBy: { x: "X", o: "O" },
       draw: "D",
     };
+    this.init();
+  }
+  init() {
     this.currentState = null;
     this.cells = [];
     this.setupGameGrid();
@@ -74,22 +107,33 @@ class GameGrid {
   }
   draw() {
     this.cells.forEach((cell) => cell.draw());
+    // if (this.currentState === this.states.playable.false) {
+    //   c.fillStyle = "green";
+    //   c.fillRect(this.x, this.y, this.width, this.height);
+    // }
   }
 }
 
 class GameBoard {
-  constructor({ x, y, width, height }) {
+  constructor({ game, x, y, width, height }) {
+    this.game = game;
+    this.input = this.game.input;
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.player = { x: "X", o: "O" };
     this.init();
   }
   init() {
+    this.gridWon = false;
+    this.gridDraw = false;
+    this.gameWon = false;
+    this.gameDraw = false;
+    this.currentPlayer = Math.random() <= 0.5 ? this.player.x : this.player.o;
     this.gameGrids = [];
     this.setupGameBoard();
-    this.firstPlayableGridIndex = 4;
-    this.setPlayableGrid(null, this.firstPlayableGridIndex);
+    this.setPlayableGrid(null, 4);
   }
   setupGameBoard() {
     const padding = 10;
@@ -116,62 +160,8 @@ class GameBoard {
       );
     }
   }
-  draw() {
-    this.gameGrids.forEach((grid) => grid.draw());
-  }
-}
-
-class InputHandler {
-  constructor(game) {
-    this.game = game;
-    this.pointer = {
-      x: 0,
-      y: 0,
-      width: 1,
-      height: 1,
-    };
-    canvas.addEventListener("click", (event) => {
-      const rect = canvas.getBoundingClientRect();
-      this.pointer.x = event.clientX - rect.left;
-      this.pointer.y = event.clientY - rect.top;
-      this.game.handleClick();
-    });
-    canvas.addEventListener("touchstart", (event) => {
-      const rect = canvas.getBoundingClientRect();
-      const touch = event.touches[0];
-      this.pointer.x = touch.clientX - rect.left;
-      this.pointer.y = touch.clientY - rect.top;
-      this.game.handleClick();
-    });
-  }
-}
-
-class Game {
-  constructor() {
-    this.width = canvas.width;
-    this.height = canvas.height;
-    this.player = { x: "X", o: "O" };
-    this.currentPlayer = Math.random() <= 0.5 ? this.player.x : this.player.o;
-    this.input = new InputHandler(this);
-    this.gameBoard = new GameBoard({
-      x: this.width * 0.5 - 500,
-      y: this.height * 0.5 - 500,
-      width: 1000,
-      height: 1000,
-    });
-    this.gridWon = false;
-    this.gridDraw = false;
-    this.gameWon = false;
-    this.gameDraw = false;
-  }
-  changeCurrentPlayer() {
-    if (this.currentPlayer === this.player.x)
-      this.currentPlayer = this.player.o;
-    else this.currentPlayer = this.player.x;
-  }
   handleClick() {
-    // this.gameBoard.gameGrids[0].cells[0]
-    this.gameBoard.gameGrids.forEach((grid, gridIndex) => {
+    this.gameGrids.forEach((grid, gridIndex) => {
       if (grid.currentState === grid.states.playable.true) {
         grid.cells.forEach((cell, cellIndex) => {
           if (
@@ -179,17 +169,22 @@ class Game {
             cell.currentState === cell.states.empty &&
             !this.gameWon
           ) {
-            cell.changeState(this.currentPlayer)
+            cell.changeState(this.currentPlayer);
             if (this.checkWinCondition()) {
               this.gameWon = true;
               return;
             }
             this.changeCurrentPlayer();
-            this.gameBoard.setPlayableGrid(gridIndex, cellIndex);
+            this.setPlayableGrid(gridIndex, cellIndex);
           }
         });
       }
     });
+  }
+  changeCurrentPlayer() {
+    if (this.currentPlayer === this.player.x)
+      this.currentPlayer = this.player.o;
+    else this.currentPlayer = this.player.x;
   }
   checkWinCondition() {
     // const winningCombinations = [
@@ -213,7 +208,7 @@ class Game {
     // }
   }
   checkDrawCondition() {
-    for (let grid of this.gameBoard.gameGrids) {
+    for (let grid of this.gameGrids) {
       for (let cell of grid.cells) {
         if (cell.currentState === cell.states.empty) {
           return false;
@@ -233,6 +228,7 @@ class Game {
       this.width * 0.5,
       this.height * 0.05
     );
+    this.gameGrids.forEach((grid) => grid.draw());
     // if (this.checkWinCondition()) {
     //   this.gameWon = true;
     //   c.fillText(
@@ -244,6 +240,23 @@ class Game {
     if (this.checkDrawCondition()) {
       c.fillText("It's a draw!", this.width * 0.5, this.height * 0.95);
     }
+  }
+}
+
+class Game {
+  constructor() {
+    this.width = canvas.width;
+    this.height = canvas.height;
+    this.input = new InputHandler(this);
+    this.gameBoard = new GameBoard({
+      game: this,
+      x: this.width * 0.5 - 500,
+      y: this.height * 0.5 - 500,
+      width: 1000,
+      height: 1000,
+    });
+  }
+  draw() {
     this.gameBoard.draw();
   }
 }
