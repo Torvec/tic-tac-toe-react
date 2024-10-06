@@ -1,6 +1,8 @@
-// TODO: Define gameGrids[4] as the first playable grid as it is the center grid
-// TODO: Setup how playable grids are determined based off of the last played cell
-// TODO: If a grid is won/drawn, it should be unplayable and if the last played cell points to that grid, the next player should be able to play anywhere
+//* Initially the first playable grid is the center grid
+//* When a player makes their move in a grid, the next playable grid is determined by the index of the cell which is then passed to the setPlayableGrid method
+// TODO: However that grid is only playable if it is not won or drawn, if the grid is unplayable then the player can play anywhere that has empty cells
+// TODO: Also need to make sure the previous grid's state is changed to unplayable but only if the next grid is playable
+// TODO: Also need to be able to set EVERY available grid to playable if the player can play anywhere
 
 class GameCell {
   constructor({ x, y, width, height }) {
@@ -48,7 +50,7 @@ class GameGrid {
       wonBy: { x: "X", o: "O" },
       draw: "D",
     };
-    this.currentState = this.states.playable.true;
+    this.currentState = null;
     this.cells = [];
     this.setupGameGrid();
   }
@@ -67,6 +69,9 @@ class GameGrid {
       }
     }
   }
+  setGameGridState(newState) {
+    this.currentState = newState;
+  }
   draw() {
     this.cells.forEach((cell) => cell.draw());
   }
@@ -78,8 +83,13 @@ class GameBoard {
     this.y = y;
     this.width = width;
     this.height = height;
+    this.init();
+  }
+  init() {
     this.gameGrids = [];
     this.setupGameBoard();
+    this.firstPlayableGridIndex = 4;
+    this.setPlayableGrid(null, this.firstPlayableGridIndex);
   }
   setupGameBoard() {
     const padding = 10;
@@ -94,6 +104,16 @@ class GameBoard {
           })
         );
       }
+    }
+  }
+  setPlayableGrid(prevIndex, newIndex) {
+    this.gameGrids[newIndex].setGameGridState(
+      this.gameGrids[newIndex].states.playable.true
+    );
+    if (prevIndex !== null && prevIndex !== newIndex) {
+      this.gameGrids[prevIndex].setGameGridState(
+        this.gameGrids[prevIndex].states.playable.false
+      );
     }
   }
   draw() {
@@ -134,14 +154,13 @@ class Game {
     this.currentPlayer = Math.random() <= 0.5 ? this.player.x : this.player.o;
     this.input = new InputHandler(this);
     this.gameBoard = new GameBoard({
-      x: 0,
-      y: 0,
-      width: this.width,
-      height: this.height,
+      x: this.width * 0.5 - 500,
+      y: this.height * 0.5 - 500,
+      width: 1000,
+      height: 1000,
     });
     this.gridWon = false;
     this.gridDraw = false;
-    this.gridPlayable = false;
     this.gameWon = false;
     this.gameDraw = false;
   }
@@ -152,21 +171,24 @@ class Game {
   }
   handleClick() {
     // this.gameBoard.gameGrids[0].cells[0]
-    this.gameBoard.gameGrids.forEach((grid) => {
-      grid.cells.forEach((cell) => {
-        if (
-          cell.isPointerOver(this.input.pointer) &&
-          cell.currentState === cell.states.empty &&
-          !this.gameWon
-        ) {
-          cell.changeState(this.currentPlayer);
-          if (this.checkWinCondition()) {
-            this.gameWon = true;
-            return;
+    this.gameBoard.gameGrids.forEach((grid, gridIndex) => {
+      if (grid.currentState === grid.states.playable.true) {
+        grid.cells.forEach((cell, cellIndex) => {
+          if (
+            cell.isPointerOver(this.input.pointer) &&
+            cell.currentState === cell.states.empty &&
+            !this.gameWon
+          ) {
+            cell.changeState(this.currentPlayer)
+            if (this.checkWinCondition()) {
+              this.gameWon = true;
+              return;
+            }
+            this.changeCurrentPlayer();
+            this.gameBoard.setPlayableGrid(gridIndex, cellIndex);
           }
-          this.changeCurrentPlayer();
-        }
-      });
+        });
+      }
     });
   }
   checkWinCondition() {
