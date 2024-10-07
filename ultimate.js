@@ -15,7 +15,7 @@ class InputHandler {
     };
     canvas.addEventListener("click", (e) => this.handleClickEvent(e));
     canvas.addEventListener("touchstart", (e) => this.handleTouchStartEvent(e));
-    // canvas.addEventListener("mousemove", (e) => this.handleMouseMoveEvent(e));
+    canvas.addEventListener("mousemove", (e) => this.handleMouseMoveEvent(e));
   }
   handleClickEvent(e) {
     const rect = canvas.getBoundingClientRect();
@@ -30,12 +30,13 @@ class InputHandler {
     this.pointer.y = touch.clientY - rect.top;
     this.game.gameBoard.handleClick();
   }
-  // handleMouseMoveEvent(e) {
-  //   const rect = canvas.getBoundingClientRect();
-  //   this.pointer.x = e.clientX - rect.left;
-  //   this.pointer.y = e.clientY - rect.top;
-  //   this.game.gameBoard.handleMouseMove();
-  // }
+  handleMouseMoveEvent(e) {
+    const rect = canvas.getBoundingClientRect();
+    this.pointer.x = e.clientX - rect.left;
+    this.pointer.y = e.clientY - rect.top;
+    // console.log(this.pointer);
+    // this.game.gameBoard.handleMouseMove();
+  }
 }
 
 class GameCell {
@@ -88,6 +89,7 @@ class GameCell {
     if (this.currentState === this.cellStates.EMPTY)
       this.currentState = newState;
   }
+  update() {}
   draw() {
     // This determines the color of the lines for each box
     c.save();
@@ -167,19 +169,17 @@ class GameGrid {
       [0, 4, 8],
       [2, 4, 6],
     ];
+    const cellStates = this.cells[0].cellStates;
     for (let combination of winningCombinations) {
       const [a, b, c] = combination;
-      const cellA = this.cells[a].cellStates;
-      const cellB = this.cells[b].cellStates;
-      const cellC = this.cells[c].cellStates;
-      if (
-        cellA === cellB &&
-        cellB === cellC &&
-        cellA !== cells.cellStates.EMPTY
-      ) {
+      const cellA = this.cells[a].currentState;
+      const cellB = this.cells[b].currentState;
+      const cellC = this.cells[c].currentState;
+      if (cellA === cellB && cellB === cellC && cellA !== cellStates.EMPTY) {
         return true;
       }
     }
+    return false;
   }
   isGridDraw() {
     for (let cell of this.cells) {
@@ -187,31 +187,52 @@ class GameGrid {
         return false;
       }
     }
-    this.currentState = this.gridStates.DRAW;
+    return true;
+  }
+  update() {
+    this.cells.forEach((cell) => cell.update());
+    if (this.isGridWon()) {
+      this.currentState =
+        this.cells[0].currentState === this.cells[0].cellStates.FILLED_X
+          ? this.gridStates.X_WON
+          : this.gridStates.O_WON;
+    }
+    if (this.isGridDraw()) {
+      this.currentState = this.gridStates.DRAW;
+    }
   }
   draw() {
     this.cells.forEach((cell) => cell.draw());
-    c.save();
     switch (this.currentState) {
       case this.gridStates.ACTIVE:
+        c.save();
         c.strokeStyle = "rgba(0, 144, 0, 1)";
         c.lineWidth = 6;
         c.strokeRect(this.x, this.y, this.width, this.height);
+        c.restore();
         break;
       case this.gridStates.X_WON:
-        c.fillStyle = "rgba(0, 0, 128, 0.5)";
-        c.fillRect(this.x, this.y, this.width, this.height);
+        c.save();
+        c.strokeStyle = "rgba(0, 0, 144, 1)";
+        c.lineWidth = 6;
+        c.strokeRect(this.x, this.y, this.width, this.height);
+        c.restore();
         break;
       case this.gridStates.O_WON:
-        c.fillStyle = "rgba(128, 0, 0, 0.5)";
-        c.fillRect(this.x, this.y, this.width, this.height);
+        c.save();
+        c.strokeStyle = "rgba(144, 0, 0, 1)";
+        c.lineWidth = 6;
+        c.strokeRect(this.x, this.y, this.width, this.height);
+        c.restore();
         break;
       case this.gridStates.DRAW:
-        c.fillStyle = "rgba(64, 64, 64, 0.5)";
-        c.fillRect(this.x, this.y, this.width, this.height);
+        c.save();
+        c.strokeStyle = "rgba(64, 64, 64, 1)";
+        c.lineWidth = 6;
+        c.strokeRect(this.x, this.y, this.width, this.height);
+        c.restore();
         break;
     }
-    c.restore();
   }
 }
 
@@ -279,6 +300,14 @@ class GameBoard {
                 ? cell.cellStates.FILLED_X
                 : cell.cellStates.FILLED_O
             );
+            if (grid.isGridWon()) {
+              grid.setGameGridState(
+                this.currentPlayer === this.player.x
+                  ? grid.gridStates.X_WON
+                  : grid.gridStates.O_WON
+              );
+              console.log(this.currentPlayer + " has won the grid!");
+            }
             this.changeCurrentPlayer();
             this.setActiveGrid(gridIndex, cellIndex);
           }
@@ -334,6 +363,9 @@ class GameBoard {
     this.gameDraw = true;
     return true;
   }
+  update() {
+    this.gameGrids.forEach((grid) => grid.update());
+  }
   draw() {
     this.gameGrids.forEach((grid) => grid.draw());
     // if (this.checkWinCondition()) {
@@ -357,11 +389,14 @@ class Game {
     this.input = new InputHandler(this);
     this.gameBoard = new GameBoard({
       game: this,
-      x: this.width * 0.5 - 500,
-      y: this.height * 0.5 - 500,
-      width: 1000,
-      height: 1000,
+      x: 16,
+      y: 32,
+      width: this.width - 32,
+      height: this.height - 32,
     });
+  }
+  update() {
+    this.gameBoard.update();
   }
   draw() {
     c.save();
@@ -381,14 +416,15 @@ class Game {
 
 const canvas = document.getElementById("gameCanvas");
 const c = canvas.getContext("2d");
-canvas.width = window.innerWidth - 64;
 canvas.height = window.innerHeight - 64;
+canvas.width = canvas.height;
 
 const game = new Game(canvas);
 
 function animationLoop() {
   c.clearRect(0, 0, canvas.width, canvas.height);
-  game.draw(c);
+  game.update();
+  game.draw();
   requestAnimationFrame(animationLoop);
 }
 requestAnimationFrame(animationLoop);
