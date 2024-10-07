@@ -15,6 +15,7 @@ class InputHandler {
     };
     canvas.addEventListener("click", (e) => this.handleClickEvent(e));
     canvas.addEventListener("touchstart", (e) => this.handleTouchStartEvent(e));
+    // canvas.addEventListener("mousemove", (e) => this.handleMouseMoveEvent(e));
   }
   handleClickEvent(e) {
     const rect = canvas.getBoundingClientRect();
@@ -29,6 +30,12 @@ class InputHandler {
     this.pointer.y = touch.clientY - rect.top;
     this.game.gameBoard.handleClick();
   }
+  // handleMouseMoveEvent(e) {
+  //   const rect = canvas.getBoundingClientRect();
+  //   this.pointer.x = e.clientX - rect.left;
+  //   this.pointer.y = e.clientY - rect.top;
+  //   this.game.gameBoard.handleMouseMove();
+  // }
 }
 
 class GameCell {
@@ -60,13 +67,38 @@ class GameCell {
       pointer.y <= this.y + this.height
     );
   }
+  // isHovered(pointer, currentPlayer) {
+  //   if (this.isPointerOver(pointer)) {
+  //     if (this.currentState === this.cellStates.EMPTY) {
+  //       this.currentState =
+  //         currentPlayer === "X"
+  //           ? this.cellStates.HOVERED_X
+  //           : this.cellStates.HOVERED_O;
+  //     }
+  //   } else {
+  //     if (
+  //       this.currentState === this.cellStates.HOVERED_X ||
+  //       this.currentState === this.cellStates.HOVERED_O
+  //     ) {
+  //       this.currentState = this.cellStates.EMPTY;
+  //     }
+  //   }
+  // }
   setGameCellState(newState) {
+    if (this.currentState === this.cellStates.EMPTY)
       this.currentState = newState;
   }
   draw() {
-    c.fillStyle = "black";
+    // This determines the color of the lines for each box
+    c.save();
+    c.strokeStyle = "black";
     c.lineWidth = 1;
     c.strokeRect(this.x, this.y, this.width, this.height);
+    c.fillStyle = "grey";
+    c.fillRect(this.x, this.y, this.width, this.height);
+    c.restore();
+    c.save();
+    c.fillStyle = "black";
     c.font = "bold 64px Monospace";
     c.textAlign = "center";
     c.textBaseline = "middle";
@@ -75,6 +107,7 @@ class GameCell {
       this.x + this.width * 0.5,
       this.y + this.height * 0.5
     );
+    c.restore();
   }
 }
 
@@ -236,32 +269,16 @@ class GameBoard {
       );
     }
   }
-  // This single method does all of the checks for every state a cell, grid, or board can be in
-  // Action 1: Iterate through all Grids on gameBoard
-  // Check 1: Is the grid's current state ACTIVE?
-  // Action 2: Iterates through all Cells in each Grid
-  // Check 2: Is the mouse/touch pointer over the cell and is the cell's current state EMPTY?
-  // Action 3: Set the cell's state to the current Player (X or O)
-  //! Check 3: Check if the game is won, if so end the game
-  // Action 4: Change the current player
-  // Action 5: Set the next playable grid
-  // What is missing?
-  // 1. Checking if the grid is won or drawn
-  // 2. Checking if the game is won or drawn
-  // 3. Checking if 
   handleClick() {
     this.gameGrids.forEach((grid, gridIndex) => {
       if (grid.currentState === grid.gridStates.ACTIVE) {
         grid.cells.forEach((cell, cellIndex) => {
-          if (
-            cell.isPointerOver(this.input.pointer) &&
-            cell.currentState === cell.cellStates.EMPTY
-          ) {
-            cell.setGameCellState(this.currentPlayer);
-            // if (this.checkWinCondition()) {
-            //   this.gameWon = true;
-            //   return;
-            // }
+          if (cell.isPointerOver(this.input.pointer)) {
+            cell.setGameCellState(
+              this.currentPlayer === this.player.x
+                ? cell.cellStates.FILLED_X
+                : cell.cellStates.FILLED_O
+            );
             this.changeCurrentPlayer();
             this.setActiveGrid(gridIndex, cellIndex);
           }
@@ -269,12 +286,23 @@ class GameBoard {
       }
     });
   }
+  // handleMouseMove() {
+  //   this.gameGrids.forEach((grid) => {
+  //     if (grid.currentState === grid.gridStates.ACTIVE) {
+  //       grid.cells.forEach((cell) => {
+  //         if (cell.currentState === cell.cellStates.EMPTY) {
+  //           cell.isHovered(this.input.pointer, this.currentPlayer);
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
   changeCurrentPlayer() {
     if (this.currentPlayer === this.player.x)
       this.currentPlayer = this.player.o;
     else this.currentPlayer = this.player.x;
   }
-  checkWinCondition() {
+  isGameWon() {
     // const winningCombinations = [
     //   [0, 1, 2],
     //   [3, 4, 5],
@@ -295,7 +323,7 @@ class GameBoard {
     //   }
     // }
   }
-  checkDrawCondition() {
+  isGameDraw() {
     for (let grid of this.gameGrids) {
       for (let cell of grid.cells) {
         if (cell.currentState === cell.cellStates.EMPTY) {
@@ -316,7 +344,7 @@ class GameBoard {
     //     this.height * 0.95
     //   );
     // }
-    if (this.checkDrawCondition()) {
+    if (this.isGameDraw()) {
       c.fillText("It's a draw!", this.width * 0.5, this.height * 0.95);
     }
   }
