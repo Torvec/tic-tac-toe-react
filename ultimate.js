@@ -170,7 +170,7 @@ class GameGrid {
       const cellB = this.cells[b].currentState;
       const cellC = this.cells[c].currentState;
       if (cellA === cellB && cellB === cellC && cellA !== STATES.CELL.E) {
-        return true;
+        return { won: true, winner: cellA };
       }
     }
     return false;
@@ -188,7 +188,7 @@ class GameGrid {
       case STATES.GRID.ACTIVE:
         c.save();
         c.strokeStyle = "rgba(0, 196, 0, 1)";
-        c.lineWidth = 6;
+        c.lineWidth = 5;
         c.strokeRect(this.x, this.y, this.width, this.height);
         c.restore();
         break;
@@ -276,12 +276,35 @@ class GameBoard {
         grid.cells.forEach((cell, cellIndex) => {
           if (cell.isPointerOver(this.input.pointer)) {
             cell.setGameCellState(STATES.CELL[this.currentPlayer]);
-            this.setCurrentPlayer();
             this.setActiveGrid(gridIndex, cellIndex);
+            this.setCurrentPlayer();
           }
         });
       }
     });
+  }
+  checkGridState(grid) {
+    if (
+      grid.currentState === STATES.GRID.ACTIVE ||
+      grid.currentState === STATES.GRID.INACTIVE
+    ) {
+      const { won, winner } = grid.isGridWon();
+      if (won) {
+        grid.setGameGridState(STATES.GRID[winner]);
+      } else if (grid.isGridDraw()) {
+        grid.setGameGridState(STATES.GRID.DRAW);
+      }
+    }
+  }
+  checkGameState() {
+    const { won, winner } = this.isGameWon();
+    if (won) {
+      this.setGameBoardState(STATES.BOARD[winner]);
+      return;
+    } else if (this.isGameDraw()) {
+      this.setGameBoardState(STATES.BOARD.DRAW);
+      return;
+    }
   }
   setCurrentPlayer() {
     switch (this.currentPlayer) {
@@ -309,11 +332,12 @@ class GameBoard {
         gridA !== STATES.GRID.INACTIVE &&
         gridA !== STATES.GRID.ACTIVE
       ) {
-        return true;
+        return { won: true, winner: gridA };
       }
     }
     return false;
   }
+  //! This does not work, need to check if all grids are in an unplayable state (X, O, DRAW), NOT if all cells are filled
   isGameDraw() {
     for (let grid of this.gameGrids) {
       for (let cell of grid.cells) {
@@ -337,17 +361,13 @@ class GameBoard {
     );
     c.restore();
   }
-  displayWinningPlayer() {
+  displayWinningPlayer(winner) {
     c.save();
     c.fillStyle = "black";
     c.font = "bold 32px Monospace";
     c.textAlign = "center";
     c.textBaseline = "middle";
-    c.fillText(
-      this.currentPlayer + " has won!",
-      this.width * 0.5,
-      this.height - 32
-    );
+    c.fillText(winner + " has won!", this.width * 0.5, this.height - 32);
   }
   displayDrawMessage() {
     c.save();
@@ -360,8 +380,13 @@ class GameBoard {
   }
   render() {
     this.displayCurrentPlayer();
-    this.gameGrids.forEach((grid) => grid.render());
-    if (this.isGameWon()) this.displayWinningPlayer();
+    this.gameGrids.forEach((grid) => {
+      this.checkGridState(grid);
+      this.checkGameState();
+      grid.render();
+    });
+    const { won, winner } = this.isGameWon();
+    if (won) this.displayWinningPlayer(winner);
     if (this.isGameDraw()) this.displayDrawMessage();
   }
 }
