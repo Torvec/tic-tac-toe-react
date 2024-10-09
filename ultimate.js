@@ -249,6 +249,9 @@ class GameBoard {
   setGameBoardState(newState) {
     this.currentState = newState;
   }
+
+  //! BUG: If a player makes a winning move in a grid where the cell corresponds to the same grid (i.e. cell 6, in grid 6) it does not activate all playable grids like it does if you make a winning move in a grid that corresponds to an unplayable grid (i.e. cell 6, in grid 7 where grid 6 is already won)
+  //? Will probably need to completely refactor this method to make everything work as intended
   setActiveGrid(prevIndex, newIndex) {
     const nextGrid = this.gameGrids[newIndex];
     const prevGrid = this.gameGrids[prevIndex];
@@ -258,7 +261,7 @@ class GameBoard {
         grid.setGameGridState(STATES.GRID.INACTIVE);
       }
     });
-    // Activates all playable inactive grids after a move where the cell corresponded to an unplayable grid
+    // Activates all inactive grids after a move where the cell corresponded to an unplayable grid
     if (nextGrid.isNotPlayable()) {
       this.gameGrids.forEach((grid) => {
         if (grid.currentState === STATES.GRID.INACTIVE) {
@@ -268,6 +271,16 @@ class GameBoard {
       // Activates the grid corresponding to the cell that was clicked if it was playable
     } else if (nextGrid.isPlayable()) {
       nextGrid.setGameGridState(STATES.GRID.ACTIVE);
+    }
+    // Activates all inactive grids after a winning move is made where the cell corresponds to the same grid (example: cell 6, in grid 6)
+    if (prevIndex === newIndex) {
+      if (prevGrid.isNotPlayable()) {
+        this.gameGrids.forEach((grid) => {
+          if (grid.currentState === STATES.GRID.INACTIVE) {
+            grid.setGameGridState(STATES.GRID.ACTIVE);
+          }
+        });
+      }
     }
     // Deactivates the previously active grid if it is not the same as the newly active grid
     if (prevIndex !== null && prevIndex !== newIndex) {
