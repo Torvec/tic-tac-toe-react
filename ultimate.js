@@ -176,12 +176,7 @@ class GameGrid {
     return false;
   }
   isGridDraw() {
-    for (let cell of this.cells) {
-      if (cell.currentState === STATES.CELL.E) {
-        return false;
-      }
-    }
-    return true;
+    return this.cells.every((cell) => cell.currentState !== STATES.CELL.E);
   }
   drawGridState() {
     switch (this.currentState) {
@@ -257,15 +252,24 @@ class GameBoard {
   setActiveGrid(prevIndex, newIndex) {
     const nextGrid = this.gameGrids[newIndex];
     const prevGrid = this.gameGrids[prevIndex];
+    // Deactivates all active grids after a move where all playable grids were activated
+    this.gameGrids.forEach((grid) => {
+      if (grid.currentState === STATES.GRID.ACTIVE) {
+        grid.setGameGridState(STATES.GRID.INACTIVE);
+      }
+    });
+    // Activates all playable inactive grids after a move where the cell corresponded to an unplayable grid
     if (nextGrid.isNotPlayable()) {
       this.gameGrids.forEach((grid) => {
         if (grid.currentState === STATES.GRID.INACTIVE) {
           grid.setGameGridState(STATES.GRID.ACTIVE);
         }
       });
+      // Activates the grid corresponding to the cell that was clicked if it was playable
     } else if (nextGrid.isPlayable()) {
       nextGrid.setGameGridState(STATES.GRID.ACTIVE);
     }
+    // Deactivates the previously active grid if it is not the same as the newly active grid
     if (prevIndex !== null && prevIndex !== newIndex) {
       prevGrid.setGameGridState(STATES.GRID.INACTIVE);
     }
@@ -283,7 +287,7 @@ class GameBoard {
       }
     });
   }
-  checkGridState(grid) {
+  checkForGridWinOrDraw(grid) {
     if (
       grid.currentState === STATES.GRID.ACTIVE ||
       grid.currentState === STATES.GRID.INACTIVE
@@ -296,7 +300,7 @@ class GameBoard {
       }
     }
   }
-  checkGameState() {
+  checkForGameWinOrDraw() {
     const { won, winner } = this.isGameWon();
     if (won) {
       this.setGameBoardState(STATES.BOARD[winner]);
@@ -307,17 +311,13 @@ class GameBoard {
     }
   }
   setCurrentPlayer() {
-    switch (this.currentPlayer) {
-      case null:
-        this.currentPlayer =
-          Math.random() <= 0.5 ? STATES.PLAYER.X : STATES.PLAYER.O;
-        break;
-      case STATES.PLAYER.X:
-        this.currentPlayer = STATES.PLAYER.O;
-        break;
-      case STATES.PLAYER.O:
-        this.currentPlayer = STATES.PLAYER.X;
-        break;
+    if (this.currentPlayer === null) {
+      this.currentPlayer =
+        Math.random() <= 0.5 ? STATES.PLAYER.X : STATES.PLAYER.O;
+    } else if (this.currentPlayer === STATES.PLAYER.X) {
+      this.currentPlayer = STATES.PLAYER.O;
+    } else if (this.currentPlayer === STATES.PLAYER.O) {
+      this.currentPlayer = STATES.PLAYER.X;
     }
   }
   isGameWon() {
@@ -337,16 +337,8 @@ class GameBoard {
     }
     return false;
   }
-  //! This does not work, need to check if all grids are in an unplayable state (X, O, DRAW), NOT if all cells are filled
   isGameDraw() {
-    for (let grid of this.gameGrids) {
-      for (let cell of grid.cells) {
-        if (cell.currentState === STATES.CELL.E) {
-          return false;
-        }
-      }
-    }
-    return true;
+    return this.gameGrids.every((grid) => grid.isNotPlayable());
   }
   displayCurrentPlayer() {
     c.save();
@@ -381,8 +373,8 @@ class GameBoard {
   render() {
     this.displayCurrentPlayer();
     this.gameGrids.forEach((grid) => {
-      this.checkGridState(grid);
-      this.checkGameState();
+      this.checkForGridWinOrDraw(grid);
+      this.checkForGameWinOrDraw();
       grid.render();
     });
     const { won, winner } = this.isGameWon();
