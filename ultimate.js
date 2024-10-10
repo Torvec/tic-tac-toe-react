@@ -247,41 +247,18 @@ class Board {
   }
   setActiveGrid({ prevIndex, newIndex }) {
     const nextGrid = this.grids[newIndex];
-    // Previous grid is null on the first move
     const prevGrid = this.grids[prevIndex];
-    // Deactivates all active grids after a move where all playable grids were activated
     this.grids.forEach((grid) => {
-      if (grid.currentState === GRID.ACTIVE) {
+      if (grid.currentState === GRID.ACTIVE)
         grid.setGridState(GRID.INACTIVE);
-      }
     });
-    // Activates all inactive grids after a move where the cell corresponded to an unplayable grid
     if (nextGrid.isNotPlayable()) {
       this.grids.forEach((grid) => {
-        if (grid.currentState === GRID.INACTIVE) {
-          grid.setGridState(GRID.ACTIVE);
-        }
+        if (grid.currentState === GRID.INACTIVE) grid.setGridState(GRID.ACTIVE);
       });
-      // Activates the grid corresponding to the cell that was clicked if it was playable
-    } else if (nextGrid.isPlayable()) {
-      nextGrid.setGridState(GRID.ACTIVE);
-    }
-    // Activates all inactive grids after a winning move is made where the cell corresponds to the same grid (example: cell 6, in grid 6)
-    if (
-      prevGrid === nextGrid &&
-      prevGrid.isNotPlayable() &&
-      nextGrid.isNotPlayable()
-    ) {
-      this.grids.forEach((grid) => {
-        if (grid.currentState === GRID.INACTIVE) {
-          grid.setGridState(GRID.ACTIVE);
-        }
-      });
-    }
-    // Deactivates the previously active grid if it is not the same as the newly active grid
-    if (prevGrid !== nextGrid) {
+    } else if (nextGrid.isPlayable()) nextGrid.setGridState(GRID.ACTIVE);
+    if (prevGrid !== nextGrid && nextGrid.isPlayable())
       prevGrid.setGridState(GRID.INACTIVE);
-    }
   }
   handleClick() {
     this.grids.forEach((grid, gridIndex) => {
@@ -302,8 +279,10 @@ class Board {
       grid.currentState === GRID.INACTIVE
     ) {
       const { won, winner } = grid.isGridWon();
-      if (won) grid.setGridState(GRID[winner]);
-      else if (grid.isGridDraw()) grid.setGridState(GRID.DRAW);
+      if (won) {
+        grid.setGridState(GRID[winner]);
+        return;
+      } else if (grid.isGridDraw()) grid.setGridState(GRID.DRAW);
     }
   }
   handleBoardStateChange() {
@@ -345,7 +324,7 @@ class Board {
       grid.render();
     });
     c.save();
-    c.fillStyle = "black";
+    c.fillStyle = "white";
     c.font = "bold 32px Monospace";
     c.textAlign = "center";
     c.textBaseline = "middle";
@@ -357,10 +336,9 @@ class Board {
     );
     // Winner Message
     const { won, winner } = this.isBoardWon();
-    if (won)
-      c.fillText(winner + " has won!", this.width * 0.5, this.height - 32);
+    if (won) c.fillText(winner + " has won!", this.width * 0.5, this.height);
     // Draw Message
-    if (this.isBoardDraw())
+    else if (this.isBoardDraw())
       c.fillText("It's a draw!", this.width * 0.5, this.height - 32);
     c.restore();
   }
