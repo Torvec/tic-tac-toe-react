@@ -4,7 +4,7 @@ const PLAYER = {
 };
 
 const CELL = {
-  INIT: " ",
+  EMPTY: " ",
   X: PLAYER.X,
   O: PLAYER.O,
 };
@@ -63,15 +63,20 @@ class InputHandler {
 }
 
 class Cell {
-  constructor({ x, y, width, height }) {
+  constructor({ board, grid, x, y, width, height }) {
+    this.board = board;
+    this.grid = grid;
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
-    this.init();
-  }
-  init() {
-    this.state = CELL.INIT;
+    this.globalAlpha;
+    this.borderColor;
+    this.borderWidth = 2;
+    this.bg;
+    this.color;
+    this.content;
+    this.state = CELL.EMPTY;
   }
   isPointerOver(pointer) {
     return (
@@ -82,27 +87,85 @@ class Cell {
     );
   }
   setState(newState) {
-    if (this.state === CELL.INIT) this.state = newState;
+    if (this.state === CELL.EMPTY) this.state = newState;
   }
-  update() {}
+  cellStates(stateName) {
+    switch (stateName) {
+      case CELL.EMPTY:
+        this.borderColor = "black";
+        this.bg = "lightgray";
+        this.color = "";
+        this.content = " ";
+        break;
+      case CELL.X:
+        this.borderColor = "blue";
+        this.bg = "darkblue";
+        this.color = "lightblue";
+        this.content = "X";
+        break;
+      case CELL.O:
+        this.borderColor = "red";
+        this.bg = "darkred";
+        this.color = "pink";
+        this.content = "O";
+        break;
+    }
+    switch (this.grid.state) {
+      case GRID.ACTIVE:
+        this.globalAlpha = 1;
+        break;
+      case GRID.INACTIVE:
+        this.globalAlpha = 0.5;
+        break;
+      case GRID.X:
+        this.borderColor = "blue";
+        this.bg = "darkblue";
+        this.color = "lightblue";
+        break;
+      case GRID.O:
+        this.borderColor = "red";
+        this.bg = "darkred";
+        this.color = "pink";
+        break;
+      case GRID.DRAW:
+        this.borderColor = "black";
+        this.bg = "darkgray";
+        this.color = "lightgray";
+        break;
+    }
+    switch (this.board.state) {
+      case BOARD.X:
+        this.borderColor = "blue";
+        this.bg = "darkblue";
+        this.color = "lightblue";
+        break;
+      case BOARD.O:
+        this.borderColor = "red";
+        this.bg = "darkred";
+        this.color = "pink";
+        break;
+      case BOARD.DRAW:
+        this.borderColor = "black";
+        this.bg = "darkgray";
+        this.color = "lightgray";
+        break;
+    }
+  }
+  update() {
+    this.cellStates(this.state);
+  }
   draw() {
+    c.save();
+    c.globalAlpha = this.globalAlpha;
     // Cell Border
-    c.save();
-    c.strokeStyle = "black";
-    c.lineWidth = 2;
+    c.strokeStyle = this.borderColor;
+    c.lineWidth = this.borderWidth;
     c.strokeRect(this.x, this.y, this.width, this.height);
-    c.restore();
     // Cell Background
-    c.save();
-    if (this.state === CELL.INIT) c.fillStyle = "lightgray";
-    if (this.state === CELL.X) c.fillStyle = "darkblue";
-    if (this.state === CELL.O) c.fillStyle = "maroon";
+    c.fillStyle = this.bg;
     c.fillRect(this.x, this.y, this.width, this.height);
-    c.restore();
     // Cell Content
-    c.save();
-    if (this.state === CELL.X) c.fillStyle = "lightblue";
-    if (this.state === CELL.O) c.fillStyle = "pink";
+    c.fillStyle = this.color;
     c.font = "bold 64px Monospace";
     c.textAlign = "center";
     c.textBaseline = "middle";
@@ -116,14 +179,12 @@ class Cell {
 }
 
 class Grid {
-  constructor({ x, y, width, height }) {
+  constructor({ board, x, y, width, height }) {
+    this.board = board;
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
-    this.init();
-  }
-  init() {
     this.state = GRID.INACTIVE;
     this.cells = [];
     this.setupGrid();
@@ -134,6 +195,8 @@ class Grid {
       for (let col = 0; col < 3; col++) {
         this.cells.push(
           new Cell({
+            board: this.board,
+            grid: this,
             x: this.x + padding + (col * (this.width - 2 * padding)) / 3,
             y: this.y + padding + (row * (this.height - 2 * padding)) / 3,
             width: (this.width - 2 * padding) / 3,
@@ -160,14 +223,14 @@ class Grid {
       const cellA = this.cells[a].state;
       const cellB = this.cells[b].state;
       const cellC = this.cells[c].state;
-      if (cellA === cellB && cellB === cellC && cellA !== CELL.INIT) {
+      if (cellA === cellB && cellB === cellC && cellA !== CELL.EMPTY) {
         return { won: true, winner: cellA };
       }
     }
     return { wond: false, winner: null };
   }
   isGridDraw() {
-    return this.cells.every((cell) => cell.state !== CELL.INIT);
+    return this.cells.every((cell) => cell.state !== CELL.EMPTY);
   }
   handleGridStateChange() {
     const { won, winner } = this.isGridWon();
@@ -180,33 +243,6 @@ class Grid {
   }
   draw() {
     this.cells.forEach((cell) => cell.draw());
-    switch (this.state) {
-      case GRID.ACTIVE:
-        c.save();
-        c.strokeStyle = "rgba(0, 196, 0, 1)";
-        c.lineWidth = 5;
-        c.strokeRect(this.x, this.y, this.width, this.height);
-        c.restore();
-        break;
-      case GRID.X:
-        c.save();
-        c.fillStyle = "rgba(0, 0, 144, 0.25)";
-        c.fillRect(this.x, this.y, this.width, this.height);
-        c.restore();
-        break;
-      case GRID.O:
-        c.save();
-        c.fillStyle = "rgba(144, 0, 0, 0.25)";
-        c.fillRect(this.x, this.y, this.width, this.height);
-        c.restore();
-        break;
-      case GRID.DRAW:
-        c.save();
-        c.fillStyle = "rgba(64, 64, 64, 0.25)";
-        c.fillRect(this.x, this.y, this.width, this.height);
-        c.restore();
-        break;
-    }
   }
 }
 class Board {
@@ -217,14 +253,12 @@ class Board {
     this.y = 32;
     this.width = this.game.width - 32;
     this.height = this.game.height - 64;
-    this.init();
-  }
-  init() {
+    this.gameOver = false;
     this.player = null;
     this.setCurrentPlayer();
     this.grids = [];
     this.setupBoard();
-    this.setState(BOARD.PLAY);
+    this.state = BOARD.PLAY;
     this.setActiveGrid(4, 4);
   }
   setupBoard() {
@@ -233,6 +267,7 @@ class Board {
       for (let col = 0; col < 3; col++) {
         this.grids.push(
           new Grid({
+            board: this,
             x: this.x + padding + (col * (this.width - 2 * padding)) / 3,
             y: this.y + padding + (row * (this.height - 2 * padding)) / 3,
             width: (this.width - 2 * padding) / 3,
@@ -253,13 +288,13 @@ class Board {
   }
   handleClick() {
     this.grids.forEach((grid, gridIndex) => {
-      if (grid.state === GRID.ACTIVE && !this.game.gameOver) {
+      if (grid.state === GRID.ACTIVE && !this.gameOver) {
         grid.cells.forEach((cell, cellIndex) => {
           if (cell.isPointerOver(this.input.pointer)) {
             cell.setState(CELL[this.player]);
             grid.handleGridStateChange();
             this.handleBoardStateChange();
-            if (this.game.gameOver) return;
+            if (this.gameOver) return;
             this.setActiveGrid(gridIndex, cellIndex);
             this.setCurrentPlayer();
           }
@@ -316,36 +351,70 @@ class Board {
     const { won, winner } = this.isBoardWon(this.grids);
     if (won) {
       this.setState(BOARD[winner]);
-      this.game.gameOver = true;
+      this.gameOver = true;
     } else if (this.isBoardDraw(this.grids)) {
       this.setState(BOARD.DRAW);
-      this.game.gameOver = true;
+      this.gameOver = true;
     }
   }
-
-  update() {
-    this.grids.forEach((grid) => grid.update());
-  }
-  draw() {
-    this.grids.forEach((grid) => grid.draw());
+  displayCurrentPlayer(player) {
     c.save();
     c.fillStyle = "white";
     c.font = "bold 32px Monospace";
     c.textAlign = "center";
     c.textBaseline = "middle";
-    // Current Player
-    c.fillText(
-      "It is " + this.player + "'s Turn",
-      this.width * 0.5,
-      this.height - this.height + 32
-    );
-    // Winner Message
-    const { won, winner } = this.isBoardWon(this.grids);
-    if (won) c.fillText(winner + " has won!", this.width * 0.5, this.height);
-    // Draw Message
-    else if (this.isBoardDraw(this.grids))
-      c.fillText("It's a draw!", this.width * 0.5, this.height - 32);
+    c.fillText("It is " + player + "'s Turn", this.width * 0.5, 32);
     c.restore();
+  }
+  displayWinMessage(winner) {
+    c.save();
+    c.fillStyle = "white";
+    c.fillRect(
+      0,
+      this.y + this.height * 0.333,
+      this.width + 32,
+      this.height * 0.333
+    );
+    c.fillStyle = "purple";
+    c.font = "bold 128px Monospace";
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    c.fillText(
+      winner + " has won!",
+      this.x + this.width * 0.5,
+      this.y + this.height * 0.5
+    );
+    c.restore();
+  }
+  displayDrawMessage() {
+    c.save();
+    c.fillStyle = "white";
+    c.fillRect(
+      0,
+      this.y + this.height * 0.333,
+      this.width + 32,
+      this.height * 0.333
+    );
+    c.fillStyle = "black";
+    c.font = "bold 128px Monospace";
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    c.fillText(
+      "The Game is a Draw!",
+      this.x + this.width * 0.5,
+      this.y + this.height * 0.5
+    );
+    c.restore();
+  }
+  update() {
+    this.grids.forEach((grid) => grid.update());
+  }
+  draw() {
+    this.grids.forEach((grid) => grid.draw());
+    this.displayCurrentPlayer(this.player);
+    const { won, winner } = this.isBoardWon(this.grids);
+    if (won) this.displayWinMessage(winner);
+    else if (this.isBoardDraw(this.grids)) this.displayDrawMessage();
   }
 }
 
@@ -355,7 +424,6 @@ class Game {
     this.height = canvas.height;
     this.input = new InputHandler(this);
     this.board = new Board(this);
-    this.gameOver = false;
   }
   render() {
     this.board.update();
