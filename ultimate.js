@@ -5,13 +5,8 @@ const PLAYER = {
 
 const CELL = {
   INIT: " ",
-  INIT_BG: "lightgray",
   X: PLAYER.X,
-  X_BG: "darkblue",
-  X_COLOR: "lightblue",
   O: PLAYER.O,
-  O_BG: "maroon",
-  O_COLOR: "pink",
 };
 
 const GRID = {
@@ -76,7 +71,7 @@ class Cell {
     this.init();
   }
   init() {
-    this.currentState = CELL.INIT;
+    this.state = CELL.INIT;
   }
   isPointerOver(pointer) {
     return (
@@ -86,10 +81,11 @@ class Cell {
       pointer.y <= this.y + this.height
     );
   }
-  setCellState(newState) {
-    if (this.currentState === CELL.INIT) this.currentState = newState;
+  setState(newState) {
+    if (this.state === CELL.INIT) this.state = newState;
   }
-  render() {
+  update() {}
+  draw() {
     // Cell Border
     c.save();
     c.strokeStyle = "black";
@@ -98,20 +94,20 @@ class Cell {
     c.restore();
     // Cell Background
     c.save();
-    if (this.currentState === CELL.INIT) c.fillStyle = "lightgray";
-    if (this.currentState === CELL.X) c.fillStyle = "darkblue";
-    if (this.currentState === CELL.O) c.fillStyle = "maroon";
+    if (this.state === CELL.INIT) c.fillStyle = "lightgray";
+    if (this.state === CELL.X) c.fillStyle = "darkblue";
+    if (this.state === CELL.O) c.fillStyle = "maroon";
     c.fillRect(this.x, this.y, this.width, this.height);
     c.restore();
     // Cell Content
     c.save();
-    if (this.currentState === CELL.X) c.fillStyle = "lightblue";
-    if (this.currentState === CELL.O) c.fillStyle = "pink";
+    if (this.state === CELL.X) c.fillStyle = "lightblue";
+    if (this.state === CELL.O) c.fillStyle = "pink";
     c.font = "bold 64px Monospace";
     c.textAlign = "center";
     c.textBaseline = "middle";
     c.fillText(
-      this.currentState,
+      this.state,
       this.x + this.width * 0.5,
       this.y + this.height * 0.5
     );
@@ -128,7 +124,7 @@ class Grid {
     this.init();
   }
   init() {
-    this.currentState = GRID.INACTIVE;
+    this.state = GRID.INACTIVE;
     this.cells = [];
     this.setupGrid();
   }
@@ -147,27 +143,23 @@ class Grid {
       }
     }
   }
-  setGridState(newState) {
-    this.currentState = newState;
+  setState(newState) {
+    this.state = newState;
   }
   isPlayable() {
-    return (
-      this.currentState === GRID.ACTIVE || this.currentState === GRID.INACTIVE
-    );
+    return this.state === GRID.ACTIVE || this.state === GRID.INACTIVE;
   }
   isNotPlayable() {
     return (
-      this.currentState === GRID.X ||
-      this.currentState === GRID.O ||
-      this.currentState === GRID.DRAW
+      this.state === GRID.X || this.state === GRID.O || this.state === GRID.DRAW
     );
   }
   isGridWon() {
     for (let combination of WINNING_COMBOS) {
       const [a, b, c] = combination;
-      const cellA = this.cells[a].currentState;
-      const cellB = this.cells[b].currentState;
-      const cellC = this.cells[c].currentState;
+      const cellA = this.cells[a].state;
+      const cellB = this.cells[b].state;
+      const cellC = this.cells[c].state;
       if (cellA === cellB && cellB === cellC && cellA !== CELL.INIT) {
         return { won: true, winner: cellA };
       }
@@ -175,11 +167,21 @@ class Grid {
     return false;
   }
   isGridDraw() {
-    return this.cells.every((cell) => cell.currentState !== CELL.INIT);
+    return this.cells.every((cell) => cell.state !== CELL.INIT);
   }
-  render() {
-    this.cells.forEach((cell) => cell.render());
-    switch (this.currentState) {
+  handleGridStateChange() {
+    const { won, winner } = this.isGridWon();
+    if (won) {
+      this.setState(GRID[winner]);
+    } else if (this.isGridDraw()) this.setState(GRID.DRAW);
+  }
+  update() {
+    this.cells.forEach((cell) => cell.update());
+    this.handleGridStateChange();
+  }
+  draw() {
+    this.cells.forEach((cell) => cell.draw());
+    switch (this.state) {
       case GRID.ACTIVE:
         c.save();
         c.strokeStyle = "rgba(0, 196, 0, 1)";
@@ -208,7 +210,6 @@ class Grid {
     }
   }
 }
-
 class Board {
   constructor(game) {
     this.game = game;
@@ -220,12 +221,12 @@ class Board {
     this.init();
   }
   init() {
-    this.currentPlayer = null;
+    this.player = null;
     this.setCurrentPlayer();
     this.grids = [];
     this.setupBoard();
-    this.setBoardState(BOARD.INIT);
-    this.setActiveGrid({ prevIndex: 4, newIndex: 4 });
+    this.setState(BOARD.INIT);
+    this.setActiveGrid(4, 4);
   }
   setupBoard() {
     const padding = 10;
@@ -242,66 +243,60 @@ class Board {
       }
     }
   }
-  setBoardState(newState) {
-    this.currentState = newState;
+  setState(newState) {
+    this.state = newState;
   }
-  setActiveGrid({ prevIndex, newIndex }) {
-    const nextGrid = this.grids[newIndex];
-    const prevGrid = this.grids[prevIndex];
-    this.grids.forEach((grid) => {
-      if (grid.currentState === GRID.ACTIVE)
-        grid.setGridState(GRID.INACTIVE);
-    });
-    if (nextGrid.isNotPlayable()) {
-      this.grids.forEach((grid) => {
-        if (grid.currentState === GRID.INACTIVE) grid.setGridState(GRID.ACTIVE);
-      });
-    } else if (nextGrid.isPlayable()) nextGrid.setGridState(GRID.ACTIVE);
-    if (prevGrid !== nextGrid && nextGrid.isPlayable())
-      prevGrid.setGridState(GRID.INACTIVE);
+  setCurrentPlayer() {
+    if (this.player === null)
+      this.player = Math.random() <= 0.5 ? PLAYER.X : PLAYER.O;
+    else if (this.player === PLAYER.X) this.player = PLAYER.O;
+    else if (this.player === PLAYER.O) this.player = PLAYER.X;
   }
   handleClick() {
     this.grids.forEach((grid, gridIndex) => {
-      if (grid.currentState === GRID.ACTIVE) {
+      if (grid.state === GRID.ACTIVE) {
         grid.cells.forEach((cell, cellIndex) => {
           if (cell.isPointerOver(this.input.pointer)) {
-            cell.setCellState(CELL[this.currentPlayer]);
-            this.setActiveGrid({ prevIndex: gridIndex, newIndex: cellIndex });
+            cell.setState(CELL[this.player]);
+            grid.handleGridStateChange();
+            this.setActiveGrid(gridIndex, cellIndex);
             this.setCurrentPlayer();
           }
         });
       }
     });
   }
-  handleGridStateChange(grid) {
-    if (
-      grid.currentState === GRID.ACTIVE ||
-      grid.currentState === GRID.INACTIVE
-    ) {
-      const { won, winner } = grid.isGridWon();
-      if (won) {
-        grid.setGridState(GRID[winner]);
-        return;
-      } else if (grid.isGridDraw()) grid.setGridState(GRID.DRAW);
+  setActiveGrid(prevIndex, newIndex) {
+    const nextGrid = this.grids[newIndex];
+    const prevGrid = this.grids[prevIndex];
+    this.grids.forEach((grid) => {
+      if (grid.state === GRID.ACTIVE) grid.setState(GRID.INACTIVE);
+    });
+    if (prevGrid === nextGrid) {
+      if (nextGrid.isNotPlayable()) {
+        this.grids.forEach((grid) => {
+          if (grid.state === GRID.INACTIVE) grid.setState(GRID.ACTIVE);
+        });
+      } else if (nextGrid.isPlayable()) {
+        nextGrid.setState(GRID.ACTIVE);
+      }
+    } else {
+      if (prevGrid.isPlayable()) prevGrid.setState(GRID.INACTIVE);
+      if (nextGrid.isNotPlayable()) {
+        this.grids.forEach((grid) => {
+          if (grid.state === GRID.INACTIVE) grid.setState(GRID.ACTIVE);
+        });
+      } else if (nextGrid.isPlayable()) {
+        nextGrid.setState(GRID.ACTIVE);
+      }
     }
   }
-  handleBoardStateChange() {
-    const { won, winner } = this.isBoardWon();
-    if (won) this.setBoardState(BOARD[winner]);
-    else if (this.isBoardDraw()) this.setBoardState(BOARD.DRAW);
-  }
-  setCurrentPlayer() {
-    if (this.currentPlayer === null)
-      this.currentPlayer = Math.random() <= 0.5 ? PLAYER.X : PLAYER.O;
-    else if (this.currentPlayer === PLAYER.X) this.currentPlayer = PLAYER.O;
-    else if (this.currentPlayer === PLAYER.O) this.currentPlayer = PLAYER.X;
-  }
-  isBoardWon() {
+  isBoardWon(grid) {
     for (let combination of WINNING_COMBOS) {
       const [a, b, c] = combination;
-      const gridA = this.grids[a].currentState;
-      const gridB = this.grids[b].currentState;
-      const gridC = this.grids[c].currentState;
+      const gridA = grid[a].state;
+      const gridB = grid[b].state;
+      const gridC = grid[c].state;
       if (
         gridA === gridB &&
         gridB === gridC &&
@@ -311,18 +306,16 @@ class Board {
         return { won: true, winner: gridA };
       }
     }
-    return false;
+    return { won: false, winner: null };
   }
-  isBoardDraw() {
-    return this.grids.every((grid) => grid.isNotPlayable());
+  isBoardDraw(grid) {
+    return grid.every((grids) => grids.isNotPlayable());
   }
-  render() {
-    // Game and Grid state checks
-    this.grids.forEach((grid) => {
-      this.handleGridStateChange(grid);
-      this.handleBoardStateChange();
-      grid.render();
-    });
+  update() {
+    this.grids.forEach((grid) => grid.update());
+  }
+  draw() {
+    this.grids.forEach((grid) => grid.draw());
     c.save();
     c.fillStyle = "white";
     c.font = "bold 32px Monospace";
@@ -330,15 +323,15 @@ class Board {
     c.textBaseline = "middle";
     // Current Player
     c.fillText(
-      "It is " + this.currentPlayer + "'s Turn",
+      "It is " + this.player + "'s Turn",
       this.width * 0.5,
       this.height - this.height + 32
     );
     // Winner Message
-    const { won, winner } = this.isBoardWon();
+    const { won, winner } = this.isBoardWon(this.grids);
     if (won) c.fillText(winner + " has won!", this.width * 0.5, this.height);
     // Draw Message
-    else if (this.isBoardDraw())
+    else if (this.isBoardDraw(this.grids))
       c.fillText("It's a draw!", this.width * 0.5, this.height - 32);
     c.restore();
   }
@@ -352,7 +345,8 @@ class Game {
     this.board = new Board(this);
   }
   render() {
-    this.board.render();
+    this.board.update();
+    this.board.draw();
   }
 }
 
@@ -368,4 +362,4 @@ function animationLoop() {
   game.render();
   requestAnimationFrame(animationLoop);
 }
-requestAnimationFrame(animationLoop);
+animationLoop();
