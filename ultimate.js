@@ -18,7 +18,7 @@ const GRID = {
 };
 
 const BOARD = {
-  INIT: "init",
+  PLAY: "play",
   X: PLAYER.X,
   O: PLAYER.O,
   DRAW: "draw",
@@ -164,16 +164,15 @@ class Grid {
         return { won: true, winner: cellA };
       }
     }
-    return false;
+    return { wond: false, winner: null };
   }
   isGridDraw() {
     return this.cells.every((cell) => cell.state !== CELL.INIT);
   }
   handleGridStateChange() {
     const { won, winner } = this.isGridWon();
-    if (won) {
-      this.setState(GRID[winner]);
-    } else if (this.isGridDraw()) this.setState(GRID.DRAW);
+    if (won) this.setState(GRID[winner]);
+    else if (this.isGridDraw()) this.setState(GRID.DRAW);
   }
   update() {
     this.cells.forEach((cell) => cell.update());
@@ -225,7 +224,7 @@ class Board {
     this.setCurrentPlayer();
     this.grids = [];
     this.setupBoard();
-    this.setState(BOARD.INIT);
+    this.setState(BOARD.PLAY);
     this.setActiveGrid(4, 4);
   }
   setupBoard() {
@@ -254,11 +253,13 @@ class Board {
   }
   handleClick() {
     this.grids.forEach((grid, gridIndex) => {
-      if (grid.state === GRID.ACTIVE) {
+      if (grid.state === GRID.ACTIVE && !this.game.gameOver) {
         grid.cells.forEach((cell, cellIndex) => {
           if (cell.isPointerOver(this.input.pointer)) {
             cell.setState(CELL[this.player]);
             grid.handleGridStateChange();
+            this.handleBoardStateChange();
+            if (this.game.gameOver) return;
             this.setActiveGrid(gridIndex, cellIndex);
             this.setCurrentPlayer();
           }
@@ -311,6 +312,17 @@ class Board {
   isBoardDraw(grid) {
     return grid.every((grids) => grids.isNotPlayable());
   }
+  handleBoardStateChange() {
+    const { won, winner } = this.isBoardWon(this.grids);
+    if (won) {
+      this.setState(BOARD[winner]);
+      this.game.gameOver = true;
+    } else if (this.isBoardDraw(this.grids)) {
+      this.setState(BOARD.DRAW);
+      this.game.gameOver = true;
+    }
+  }
+
   update() {
     this.grids.forEach((grid) => grid.update());
   }
@@ -343,6 +355,7 @@ class Game {
     this.height = canvas.height;
     this.input = new InputHandler(this);
     this.board = new Board(this);
+    this.gameOver = false;
   }
   render() {
     this.board.update();
