@@ -1,25 +1,24 @@
 const STATE = {
-  IDLE: 0,
-  HOVER: 1,
+  IDLE: "idle",
+  HOVER: "hover",
 };
 
 export class Button {
-  constructor({imageSrc, x, y, width, height, text }) {
+  constructor({ canvas, name, x, y, srcX, srcY, srcWidth, srcHeight }) {
+    this.name = name;
+    this.canvas = canvas;
     this.image = new Image();
-    this.image.src = imageSrc;
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.text = text;
+    this.image.src = "assets/buttons.png";
+    this.position = { x: x, y: y };
+    this.source = { x: srcX, y: srcY, width: srcWidth, height: srcHeight };
     this.state = STATE.IDLE;
   }
   isPointerOver(pointer) {
     return (
-      pointer.x >= this.x &&
-      pointer.x <= this.x + this.width &&
-      pointer.y >= this.y &&
-      pointer.y <= this.y + this.height
+      pointer.x >= this.position.x &&
+      pointer.x <= this.position.x + this.source.width &&
+      pointer.y >= this.position.y &&
+      pointer.y <= this.position.y + this.source.height
     );
   }
   setState(newState) {
@@ -28,10 +27,12 @@ export class Button {
   buttonStates(stateName) {
     switch (stateName) {
       case STATE.IDLE:
-        this.color = "#CCCCCC";
+        this.source.x = 16;
+        this.canvas.style.cursor = "default";
         break;
       case STATE.HOVER:
-        this.color = "#EEEEEE";
+        this.source.x = this.source.width + 32;
+        this.canvas.style.cursor = "pointer";
         break;
     }
   }
@@ -41,19 +42,16 @@ export class Button {
     this.buttonStates(this.state);
   }
   draw(c) {
-    c.drawImage(this.image, this.x, this.y, this.width, this.height);
-    // c.save();
-    // c.fillStyle = "#404040";
-    // c.fillRect(this.x, this.y, this.width, this.height);
-    // c.fillStyle = "#CCCCCC";
-    // c.textAlign = "center";
-    // c.textBaseline = "middle";
-    // c.font = "bold 32px Roboto Mono";
-    // c.fillText(
-    //   this.text,
-    //   this.x + this.width * 0.5,
-    //   this.y + this.height * 0.5
-    // );
-    // c.restore();
+    c.drawImage(
+      this.image,
+      this.source.x,
+      this.source.y,
+      this.source.width,
+      this.source.height,
+      this.position.x,
+      this.position.y,
+      this.source.width,
+      this.source.height
+    );
   }
 }

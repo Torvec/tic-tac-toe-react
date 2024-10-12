@@ -30,43 +30,60 @@ export class Menu {
     this.gameLogo.src = "assets/game_logo.png";
     this.myLogo = new Image();
     this.myLogo.src = "assets/logo_bo.png";
-    this.input = new InputHandler(this, this.canvas, (pointer) => {
-      this.handlePointerEvent(pointer);
+    this.input = new InputHandler({
+      menu: this,
+      canvas: this.canvas,
+      onPointerEvent: (pointer) => this.handlePointerEvent(pointer),
     });
     this.buttons = [
       new Button({
-        imageSrc: "assets/classic_mode_button.png",
-        x: this.width * 0.35 - 128,
+        name: "Classic Mode",
+        canvas: this.canvas,
+        x: this.width * 0.3 - 64,
+        y: this.height * 0.5 - 128,
+        srcX: 16,
+        srcY: 16,
+        srcWidth: 256,
+        srcHeight: 256,
+      }),
+      new Button({
+        name: "Ultimate Mode",
+        canvas: this.canvas,
+        x: this.width * 0.5 + 64,
+        y: this.height * 0.5 - 128,
+        srcX: 16,
+        srcY: 288,
+        srcWidth: 256,
+        srcHeight: 256,
+      }),
+      new Button({
+        name: "Player vs Player",
+        canvas: this.canvas,
+        x: this.width * 0.3 - 64,
         y: this.height * 0.5,
-        width: 256,
-        height: 256,
+        srcX: 16,
+        srcY: 560,
+        srcWidth: 256,
+        srcHeight: 256,
       }),
       new Button({
-        imageSrc: "assets/ultimate_mode_button.png",
-        x: this.width * 0.65 - 128,
+        name: "Player vs Computer",
+        canvas: this.canvas,
+        x: this.width * 0.5 + 64,
         y: this.height * 0.5,
-        width: 256,
-        height: 256,
-      }),
-      new Button({
-        imageSrc: "assets/pvp_button.png",
-        x: this.width * 0.35 - 100,
-        y: this.height * 0.5 - 50,
-        width: 256,
-        height: 256,
-      }),
-      new Button({
-        imageSrc: "assets/pvc_button.png",
-        x: this.width * 0.65 - 100,
-        y: this.height * 0.5 - 50,
-        width: 256,
-        height: 256,
+        srcX: 16,
+        srcY: 832,
+        srcWidth: 256,
+        srcHeight: 256,
       }),
     ];
     this.state = MENU.VERSUS;
   }
   handlePointerEvent(pointer) {
     // Handle button clicks/touches here
+  }
+  checkPointerOverButtons(pointer) {
+    this.buttons.forEach((button) => button.update(pointer));
   }
   setState(newState) {
     this.state = newState;
@@ -103,19 +120,18 @@ export class Menu {
   }
   update() {
     // Handle state changes here between MENU.MODE and MENU.VERSUS
+    // Handle state changes between IDLE and HOVER for each button
   }
   draw(c) {
     this.header(c);
     if (this.state === MENU.MODE) {
       this.menuTitle(c, SELECT_TEXT.MODE);
-      for (let i = 0; i < 2; i++) {
-        this.buttons[i].draw(c);
-      }
+      this.buttons[0].draw(c);
+      this.buttons[1].draw(c);
     } else if (this.state === MENU.VERSUS) {
       this.menuTitle(c, SELECT_TEXT.VERSUS);
-      for (let i = 2; i < this.buttons.length; i++) {
-        this.buttons[i].draw(c);
-      }
+      this.buttons[2].draw(c);
+      this.buttons[3].draw(c);
     }
     this.footer(c);
   }
