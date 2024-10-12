@@ -12,7 +12,8 @@ const menu = new Menu(canvas);
 function animationLoop() {
   c.clearRect(0, 0, canvas.width, canvas.height);
   // game.render(c);
-  menu.render(c);
+  menu.update();
+  menu.draw(c);
   requestAnimationFrame(animationLoop);
 }
 requestAnimationFrame(animationLoop);
