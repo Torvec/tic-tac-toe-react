@@ -1,10 +1,45 @@
-class GameCell {
-  constructor(x, y, width, height) {
+const PLAYER = {
+  X: "X",
+  O: "O",
+};
+
+const CELL = {
+  EMPTY: " ",
+  X: PLAYER.X,
+  O: PLAYER.O,
+};
+
+const GRID = {
+  ACTIVE: "active",
+  X: PLAYER.X,
+  O: PLAYER.O,
+  DRAW: "draw",
+};
+
+const WINNING_COMBOS = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+];
+
+class Cell {
+  constructor({ grid, x, y, width, height }) {
+    this.grid = grid;
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
-    this.state = " ";
+    this.borderColor;
+    this.borderWidth = 2;
+    this.bg;
+    this.color;
+    this.content;
+    this.state = CELL.EMPTY;
   }
   isPointerOver(pointer) {
     return (
@@ -14,13 +49,62 @@ class GameCell {
       pointer.y <= this.y + this.height
     );
   }
-  changeState(newState) {
-    if (this.state === " ") this.state = newState;
+  setState(newState) {
+    if (this.state === CELL.EMPTY) this.state = newState;
   }
-  draw() {
-    c.fillStyle = "black";
-    c.lineWidth = 2;
+  cellStates(stateName) {
+    switch (stateName) {
+      case CELL.EMPTY:
+        this.borderColor = "black";
+        this.bg = "lightgray";
+        this.color = "";
+        this.content = " ";
+        break;
+      case CELL.X:
+        this.borderColor = "blue";
+        this.bg = "darkblue";
+        this.color = "lightblue";
+        this.content = "X";
+        break;
+      case CELL.O:
+        this.borderColor = "red";
+        this.bg = "darkred";
+        this.color = "pink";
+        this.content = "O";
+        break;
+    }
+    switch (this.grid.state) {
+      case GRID.X:
+        this.borderColor = "blue";
+        this.bg = "darkblue";
+        this.color = "lightblue";
+        break;
+      case GRID.O:
+        this.borderColor = "red";
+        this.bg = "darkred";
+        this.color = "pink";
+        break;
+      case GRID.DRAW:
+        this.borderColor = "black";
+        this.bg = "darkgray";
+        this.color = "lightgray";
+        break;
+    }
+  }
+  update() {
+    this.cellStates(this.state);
+  }
+  draw(c) {
+    c.save();
+    // Cell Border
+    c.strokeStyle = this.borderColor;
+    c.lineWidth = this.borderWidth;
     c.strokeRect(this.x, this.y, this.width, this.height);
+    // Cell Background
+    c.fillStyle = this.bg;
+    c.fillRect(this.x, this.y, this.width, this.height);
+    // Cell Content
+    c.fillStyle = this.color;
     c.font = "bold 64px Monospace";
     c.textAlign = "center";
     c.textBaseline = "middle";
@@ -29,156 +113,142 @@ class GameCell {
       this.x + this.width * 0.5,
       this.y + this.height * 0.5
     );
+    c.restore();
   }
 }
 
-class GameGrid {
-  constructor(game, x, y, width, height, rows, cols) {
-    this.game = game;
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.rows = rows;
-    this.cols = cols;
-    this.cells = [];
-    this.setupGameGrid();
-  }
-  setupGameGrid() {
-    const cellWidth = this.width / this.cols;
-    const cellHeight = this.height / this.rows;
-    for (let row = 0; row < this.rows; row++) {
-      for (let col = 0; col < this.cols; col++) {
-        const x = this.x + col * cellWidth;
-        const y = this.y + row * cellHeight;
-        this.cells.push(new GameCell(x, y, cellWidth, cellHeight));
-      }
-    }
-  }
-  draw() {
-    this.cells.forEach((cell) => cell.draw());
-  }
-}
-
-class InputHandler {
+export class Grid {
   constructor(game) {
     this.game = game;
-    this.pointer = {
-      x: 0,
-      y: 0,
-      width: 1,
-      height: 1,
-    };
-    canvas.addEventListener("click", (event) => {
-      const rect = canvas.getBoundingClientRect();
-      this.pointer.x = event.clientX - rect.left;
-      this.pointer.y = event.clientY - rect.top;
-      this.game.handleClick();
-    });
-    canvas.addEventListener("touchstart", (event) => {
-      const rect = canvas.getBoundingClientRect();
-      const touch = event.touches[0];
-      this.pointer.x = touch.clientX - rect.left;
-      this.pointer.y = touch.clientY - rect.top;
-      this.game.handleClick();
-    });
+    this.input = this.game.input;
+    this.x = 16;
+    this.y = 32;
+    this.width = this.game.width - 32;
+    this.height = this.game.height - 64;
+    this.gameOver = false;
+    this.player = null;
+    this.setCurrentPlayer();
+    this.cells = [];
+    this.createGrid();
+    this.state = GRID.ACTIVE;
   }
-}
-
-class Game {
-  constructor() {
-    this.width = canvas.width;
-    this.height = canvas.height;
-    this.players = ["X", "O"];
-    this.currentPlayer =
-      Math.random() <= 0.5 ? this.players[0] : this.players[1];
-    this.input = new InputHandler(this);
-    this.cellState = " ";
-    this.cellStates = [" ", "X", "O"];
-    this.gameGrid = new GameGrid(this, 0, 0, this.width, this.height, 3, 3);
-    this.gameWon = false;
-    this.gameDraw = false;
-  }
-  changeCurrentPlayer() {
-    if (this.currentPlayer === this.players[0])
-      this.currentPlayer = this.players[1];
-    else this.currentPlayer = this.players[0];
-  }
-  handleClick() {
-    this.gameGrid.cells.forEach((cell) => {
-      if (
-        cell.isPointerOver(this.input.pointer) &&
-        cell.state === " " &&
-        !this.gameWon
-      ) {
-        cell.changeState(this.currentPlayer);
-        if (this.checkWinCondition()) {
-          this.gameWon = true;
-          return;
-        }
-        this.changeCurrentPlayer();
-      }
-    });
-  }
-  checkWinCondition() {
-    const winningCombinations = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-    for (let combination of winningCombinations) {
-      const [a, b, c] = combination;
-      const cellA = this.gameGrid.cells[a].state;
-      const cellB = this.gameGrid.cells[b].state;
-      const cellC = this.gameGrid.cells[c].state;
-      if (cellA === cellB && cellB === cellC && cellA !== " ") {
-        return true;
+  createGrid() {
+    const padding = 10;
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 3; col++) {
+        this.cells.push(
+          new Cell({
+            grid: this,
+            x: this.x + padding + (col * (this.width - 2 * padding)) / 3,
+            y: this.y + padding + (row * (this.height - 2 * padding)) / 3,
+            width: (this.width - 2 * padding) / 3,
+            height: (this.height - 2 * padding) / 3,
+          })
+        );
       }
     }
   }
-  checkDrawCondition() {
-    return this.gameGrid.cells.every((cell) => cell.state !== " ");
+  setState(newState) {
+    this.state = newState;
   }
-  draw() {
-    c.fillStyle = "black";
+  setCurrentPlayer() {
+    if (this.player === null)
+      this.player = Math.random() <= 0.5 ? PLAYER.X : PLAYER.O;
+    else if (this.player === PLAYER.X) this.player = PLAYER.O;
+    else if (this.player === PLAYER.O) this.player = PLAYER.X;
+  }
+  handleClick() {
+    this.cells.forEach((cell) => {
+      if (cell.isPointerOver(this.input.pointer) && cell.state === CELL.EMPTY) {
+        cell.setState(CELL[this.player]);
+        this.handleGridStateChange();
+        if (this.gameOver) return;
+        this.setCurrentPlayer();
+      }
+    });
+  }
+  isGridWon(cell) {
+    for (let combination of WINNING_COMBOS) {
+      const [a, b, c] = combination;
+      const cellA = cell[a].state;
+      const cellB = cell[b].state;
+      const cellC = cell[c].state;
+      if (cellA === cellB && cellB === cellC && cellA !== CELL.EMPTY) {
+        return { won: true, winner: cellA };
+      }
+    }
+    return { wond: false, winner: null };
+  }
+  isGridDraw(cells) {
+    return cells.every((cell) => cell.state !== CELL.EMPTY);
+  }
+  handleGridStateChange() {
+    const { won, winner } = this.isGridWon(this.cells);
+    if (won) {
+      this.setState(GRID[winner]);
+      this.gameOver = true;
+    } else if (this.isGridDraw(this.cells)) {
+      this.setState(GRID.DRAW);
+      this.gameOver = true;
+    }
+  }
+  displayCurrentPlayer(c, player) {
+    c.save();
+    c.fillStyle = "white";
     c.font = "bold 32px Monospace";
     c.textAlign = "center";
     c.textBaseline = "middle";
-    c.fillText(
-      "It is " + this.currentPlayer + "'s Turn",
-      this.width * 0.5,
-      this.height * 0.05
+    c.fillText("It is " + player + "'s Turn", this.width * 0.5, 32);
+    c.restore();
+  }
+  displayWinMessage(c, winner) {
+    c.save();
+    c.fillStyle = "white";
+    c.fillRect(
+      0,
+      this.y + this.height * 0.333,
+      this.width + 32,
+      this.height * 0.333
     );
-    if (this.checkWinCondition()) {
-      this.gameWon = true;
-      c.fillText(
-        this.currentPlayer + " has won!",
-        this.width * 0.5,
-        this.height * 0.95
-      );
-    } else if (this.checkDrawCondition()) {
-      this.gameDraw = true;
-      c.fillText("It's a draw!", this.width * 0.5, this.height * 0.95);
-    }
-    this.gameGrid.draw(c);
+    c.fillStyle = "purple";
+    c.font = "bold 128px Monospace";
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    c.fillText(
+      winner + " has won!",
+      this.x + this.width * 0.5,
+      this.y + this.height * 0.5
+    );
+    c.restore();
+  }
+  displayDrawMessage(c) {
+    c.save();
+    c.fillStyle = "white";
+    c.fillRect(
+      0,
+      this.y + this.height * 0.333,
+      this.width + 32,
+      this.height * 0.333
+    );
+    c.fillStyle = "black";
+    c.font = "bold 128px Monospace";
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    c.fillText(
+      "The Game is a Draw!",
+      this.x + this.width * 0.5,
+      this.y + this.height * 0.5
+    );
+    c.restore();
+  }
+  update() {
+    this.cells.forEach((cell) => cell.update());
+  }
+  draw(c) {
+    this.cells.forEach((cell) => cell.draw(c));
+    this.displayCurrentPlayer(c, this.player);
+    const { won, winner } = this.isGridWon(this.cells);
+    if (won) this.displayWinMessage(c, winner);
+    else if (this.isGridDraw(this.cells)) this.displayDrawMessage(c);
   }
 }
-
-const canvas = document.getElementById("gameCanvas");
-const c = canvas.getContext("2d");
-canvas.width = window.innerWidth - 64;
-canvas.height = window.innerHeight - 64;
-
-const game = new Game(canvas);
-
-function animationLoop() {
-  c.clearRect(0, 0, canvas.width, canvas.height);
-  game.draw(c);
-  requestAnimationFrame(animationLoop);
-}
-requestAnimationFrame(animationLoop);

@@ -35,33 +35,6 @@ const WINNING_COMBOS = [
   [2, 4, 6],
 ];
 
-class InputHandler {
-  constructor(game) {
-    this.game = game;
-    this.pointer = {
-      x: 0,
-      y: 0,
-      width: 1,
-      height: 1,
-    };
-    canvas.addEventListener("click", (e) => this.handleClickEvent(e));
-    canvas.addEventListener("touchstart", (e) => this.handleTouchStartEvent(e));
-  }
-  handleClickEvent(e) {
-    const rect = canvas.getBoundingClientRect();
-    this.pointer.x = e.clientX - rect.left;
-    this.pointer.y = e.clientY - rect.top;
-    this.game.board.handleClick();
-  }
-  handleTouchStartEvent(e) {
-    const rect = canvas.getBoundingClientRect();
-    const touch = e.touches[0];
-    this.pointer.x = touch.clientX - rect.left;
-    this.pointer.y = touch.clientY - rect.top;
-    this.game.board.handleClick();
-  }
-}
-
 class Cell {
   constructor({ board, grid, x, y, width, height }) {
     this.board = board;
@@ -154,7 +127,7 @@ class Cell {
   update() {
     this.cellStates(this.state);
   }
-  draw() {
+  draw(c) {
     c.save();
     c.globalAlpha = this.globalAlpha;
     // Cell Border
@@ -187,9 +160,9 @@ class Grid {
     this.height = height;
     this.state = GRID.INACTIVE;
     this.cells = [];
-    this.setupGrid();
+    this.createGrid();
   }
-  setupGrid() {
+  createGrid() {
     const padding = 10;
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {
@@ -241,11 +214,12 @@ class Grid {
     this.cells.forEach((cell) => cell.update());
     this.handleGridStateChange();
   }
-  draw() {
-    this.cells.forEach((cell) => cell.draw());
+  draw(c) {
+    this.cells.forEach((cell) => cell.draw(c));
   }
 }
-class Board {
+
+export class Board {
   constructor(game) {
     this.game = game;
     this.input = this.game.input;
@@ -257,11 +231,11 @@ class Board {
     this.player = null;
     this.setCurrentPlayer();
     this.grids = [];
-    this.setupBoard();
+    this.createBoard();
     this.state = BOARD.PLAY;
     this.setActiveGrid(4, 4);
   }
-  setupBoard() {
+  createBoard() {
     const padding = 10;
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {
@@ -357,7 +331,7 @@ class Board {
       this.gameOver = true;
     }
   }
-  displayCurrentPlayer(player) {
+  displayCurrentPlayer(c, player) {
     c.save();
     c.fillStyle = "white";
     c.font = "bold 32px Monospace";
@@ -366,7 +340,7 @@ class Board {
     c.fillText("It is " + player + "'s Turn", this.width * 0.5, 32);
     c.restore();
   }
-  displayWinMessage(winner) {
+  displayWinMessage(c, winner) {
     c.save();
     c.fillStyle = "white";
     c.fillRect(
@@ -386,7 +360,7 @@ class Board {
     );
     c.restore();
   }
-  displayDrawMessage() {
+  displayDrawMessage(c) {
     c.save();
     c.fillStyle = "white";
     c.fillRect(
@@ -409,38 +383,11 @@ class Board {
   update() {
     this.grids.forEach((grid) => grid.update());
   }
-  draw() {
-    this.grids.forEach((grid) => grid.draw());
-    this.displayCurrentPlayer(this.player);
+  draw(c) {
+    this.grids.forEach((grid) => grid.draw(c));
+    this.displayCurrentPlayer(c, this.player);
     const { won, winner } = this.isBoardWon(this.grids);
-    if (won) this.displayWinMessage(winner);
-    else if (this.isBoardDraw(this.grids)) this.displayDrawMessage();
+    if (won) this.displayWinMessage(c, winner);
+    else if (this.isBoardDraw(this.grids)) this.displayDrawMessage(c);
   }
 }
-
-class Game {
-  constructor() {
-    this.width = canvas.width;
-    this.height = canvas.height;
-    this.input = new InputHandler(this);
-    this.board = new Board(this);
-  }
-  render() {
-    this.board.update();
-    this.board.draw();
-  }
-}
-
-const canvas = document.getElementById("gameCanvas");
-const c = canvas.getContext("2d");
-canvas.height = window.innerHeight;
-canvas.width = canvas.height;
-
-const game = new Game(canvas);
-
-function animationLoop() {
-  c.clearRect(0, 0, canvas.width, canvas.height);
-  game.render();
-  requestAnimationFrame(animationLoop);
-}
-animationLoop();
