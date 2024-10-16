@@ -1,5 +1,5 @@
-# Tic Tac Toe in React with Vite and TailwindCSS
-What was initially a vanilla javascript project is now going to be a React + Vite + TailwindCSS project. I'm going to use my two previous projects that were split from the original version of this project and they can be found here:
+# Tic Tac Toe in React + TypeScript + Vite + TailwindCSS
+What was initially a vanilla javascript project is now going to be a React + TypeScript + Vite + TailwindCSS project. I'm going to use my two previous projects that were split from the original version of this project and they can be found here:
 - [Tic Tac Toe Classic](https://github.com/Torvec/tic-tac-toe-ultimate)
 - [Tic Tac Toe Ultimate](https://github.com/Torvec/tic-tac-toe-classic)
 
