@@ -1,16 +1,21 @@
 import "./App.css";
 import Header from "./components/ui/header";
-import Button from "./components/ui/button";
+import Mode from "./components/pages/mode";
+// import Opponent from "./components/pages/opponent";
+// import HowToPlay from "./components/pages/howToPlay";
+// import Game from "./components/pages/game";
 import Footer from "./components/ui/footer";
 
 export default function App() {
   return (
     <div className="rounded-3xl bg-neutral-200">
-      <div className="container mx-auto flex min-h-screen flex-col">
+      <div className="container mx-auto flex min-h-[95vh] flex-col">
         <Header />
-        <main className="flex-grow">
-          <Button type="large">A Square Button</Button>
-          <Button type="small">A Rectangle Button</Button>
+        <main className="flex-grow place-content-center">
+          <Mode />
+          {/* <Opponent /> */}
+          {/* <HowToPlay /> */}
+          {/* <Game /> */}
         </main>
         <Footer />
       </div>
