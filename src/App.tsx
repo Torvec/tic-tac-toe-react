@@ -9,7 +9,7 @@ import Footer from "./components/ui/footer";
 export default function App() {
   return (
     <div className="rounded-3xl bg-neutral-200">
-      <div className="container mx-auto flex min-h-[95vh] flex-col">
+      <div className="fullscreen container mx-auto flex flex-col">
         <Header />
         <main className="flex-grow place-content-center">
           <Mode />
