@@ -1,6 +1,6 @@
-import Button from "../ui/button";
+import { Button } from "../ui/button";
 
-export default function Opponent() {
+export const Opponent = () => {
   const text = {
     header: "Select Opponent",
     pvpButton: "Player vs Player",
@@ -22,4 +22,4 @@ export default function Opponent() {
       </div>
     </>
   );
-}
+};

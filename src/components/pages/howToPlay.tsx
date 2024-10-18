@@ -1,6 +1,6 @@
-import Button from "../ui/button";
+import { Button } from "../ui/button";
 
-export default function HowToPlay() {
+export const HowToPlay = () => {
   const text = {
     classicMode: {
       header: "Classic Mode",
@@ -38,4 +38,4 @@ export default function HowToPlay() {
       </div>
     </>
   );
-}
+};

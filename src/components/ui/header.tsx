@@ -1,9 +1,9 @@
-import GameLogo from "./gameLogo";
+import { GameLogo } from "./gameLogo";
 
-export default function Header() {
+export const Header = () => {
   return (
     <header className="py-8">
       <GameLogo />
     </header>
   );
-}
+};

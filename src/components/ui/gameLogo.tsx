@@ -1,4 +1,4 @@
-export default function GameLogo() {
+export const GameLogo = () => {
   const letters = ["T", "I", "C", "T", "A", "C", "T", "O", "E"];
 
   return (
@@ -13,4 +13,4 @@ export default function GameLogo() {
       ))}
     </div>
   );
-}
+};

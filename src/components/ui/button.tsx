@@ -12,8 +12,8 @@ const classNames = {
     "bg-neutral-700 text-neutral-300 rounded-xl py-5 px-20 uppercase text-3xl font-bold",
 };
 
-export default function Button({ children, type }: ButtonProps) {
+export const Button = ({ children, type }: ButtonProps) => {
   const className = classNames[type];
 
   return <button className={className}>{children}</button>;
-}
+};

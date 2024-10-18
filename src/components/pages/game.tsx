@@ -1,6 +1,6 @@
-import Button from "../ui/button";
+import { Button } from "../ui/button";
 
-export default function Game() {
+export const Game = () => {
   const text = {
     xTurn: "X's Turn",
     oTurn: "O's Turn",
@@ -10,15 +10,17 @@ export default function Game() {
 
   return (
     <>
-      <div className="flex gap-16 justify-center mb-8">
+      <div className="mb-8 flex justify-center gap-16">
         <div>{text.xTurn}</div>
         <div>{text.oTurn}</div>
       </div>
-      <div className="text-center py-96 mb-8 bg-neutral-500">Game Grid&#40;s&#41; here</div>
-      <div className="flex gap-4 justify-center">
+      <div className="mb-8 bg-neutral-500 py-96 text-center">
+        Game Grid&#40;s&#41; here
+      </div>
+      <div className="flex justify-center gap-4">
         <Button type="small">{text.resetButton}</Button>
         <Button type="small">{text.startMenuButton}</Button>
       </div>
     </>
   );
-}
+};

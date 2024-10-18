@@ -1,4 +1,4 @@
-export default function Footer() {
+export const Footer = () => {
   const text = {
     year: 2024,
     name: "Edward Vonschondorf",
@@ -21,4 +21,4 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+};

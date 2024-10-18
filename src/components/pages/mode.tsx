@@ -1,6 +1,6 @@
-import Button from "../ui/button";
+import { Button } from "../ui/button";
 
-export default function mode() {
+export const Mode = () => {
   const text = {
     header: "Select Mode",
     classicButton: "Classic Mode",
@@ -12,7 +12,7 @@ export default function mode() {
       <h2 className="mb-8 text-center font-mono text-4xl font-bold">
         {text.header}
       </h2>
-      <div className="flex justify-center gap-4 mb-8">
+      <div className="mb-8 flex justify-center gap-4">
         <Button type="large">{text.classicButton}</Button>
         <Button type="large">{text.ultimateButton}</Button>
       </div>
@@ -21,4 +21,4 @@ export default function mode() {
       </div>
     </>
   );
-}
+};
