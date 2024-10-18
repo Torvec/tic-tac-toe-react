@@ -1,12 +1,15 @@
 import { Button } from "../ui/button";
+import { useNavContext } from "../hooks/useNavContext";
 
 export const Opponent = () => {
   const text = {
     header: "Select Opponent",
     pvpButton: "Player vs Player",
     pvcButton: "Player vs Computer",
-    startMenuButton: "Start Menu",
+    backButton: "Back",
   };
+
+  const { setCurrentPage } = useNavContext();
 
   return (
     <>
@@ -14,11 +17,17 @@ export const Opponent = () => {
         {text.header}
       </h2>
       <div className="mb-8 flex justify-center gap-4">
-        <Button type="large">{text.pvpButton}</Button>
-        <Button type="large">{text.pvcButton}</Button>
+        <Button type="large" onClick={() => setCurrentPage("game")}>
+          {text.pvpButton}
+        </Button>
+        <Button type="large" onClick={() => setCurrentPage("game")}>
+          {text.pvcButton}
+        </Button>
       </div>
       <div className="flex justify-center">
-        <Button type="small">{text.startMenuButton}</Button>
+        <Button type="small" onClick={() => setCurrentPage("mode")}>
+          {text.backButton}
+        </Button>
       </div>
     </>
   );

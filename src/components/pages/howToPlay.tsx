@@ -1,4 +1,5 @@
 import { Button } from "../ui/button";
+import { useNavContext } from "../hooks/useNavContext";
 
 export const HowToPlay = () => {
   const text = {
@@ -15,8 +16,10 @@ export const HowToPlay = () => {
       p4: "Win the game: 3 grids in a row in a horizontal, vertical, or diagonal direction wins the game.",
       p5: "Draw: If all grids are won or drawn but no win condition is met then it is a draw.",
     },
-    startMenuButton: "Start Menu",
+    backButton: "Back",
   };
+
+  const { setCurrentPage } = useNavContext();
 
   return (
     <>
@@ -34,7 +37,7 @@ export const HowToPlay = () => {
         <p>{text.ultimateMode.p5}</p>
       </div>
       <div className="flex justify-center">
-        <Button type="small">{text.startMenuButton}</Button>
+        <Button type="small" onClick={() => setCurrentPage("mode")}>{text.backButton}</Button>
       </div>
     </>
   );
