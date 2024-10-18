@@ -1,5 +1,6 @@
 import { Button } from "../ui/button";
 import { useNavContext } from "../hooks/useNavContext";
+import { useOptionsContext } from "../hooks/useOptionsContext";
 
 export const Mode = () => {
   const text = {
@@ -10,6 +11,17 @@ export const Mode = () => {
   };
 
   const { setCurrentPage } = useNavContext();
+  const { setGameMode } = useOptionsContext();
+
+  const handleClassicModeSelect = () => {
+    setGameMode("classic");
+    setCurrentPage("opponent");
+  };
+
+  const handleUltimateModeSelect = () => {
+    setGameMode("ultimate");
+    setCurrentPage("opponent");
+  };
 
   return (
     <>
@@ -17,10 +29,10 @@ export const Mode = () => {
         {text.header}
       </h2>
       <div className="mb-32 flex justify-center gap-4">
-        <Button type="large" onClick={() => setCurrentPage("opponent")}>
+        <Button type="large" onClick={handleClassicModeSelect}>
           {text.classicButton}
         </Button>
-        <Button type="large" onClick={() => setCurrentPage("opponent")}>
+        <Button type="large" onClick={handleUltimateModeSelect}>
           {text.ultimateButton}
         </Button>
       </div>

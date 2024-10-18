@@ -1,5 +1,6 @@
 import { Button } from "../ui/button";
 import { useNavContext } from "../hooks/useNavContext";
+import { useOptionsContext } from "../hooks/useOptionsContext";
 
 export const Game = () => {
   const text = {
@@ -9,7 +10,24 @@ export const Game = () => {
     quitButton: "Quit",
   };
 
-  const { setCurrentPage } = useNavContext();
+  const currentOpponent = {
+    pvp: "Player vs Player",
+    pvc: "Player vs Computer",
+  };
+
+  const { currentPage, setCurrentPage } = useNavContext();
+  const { gameMode, setGameMode, opponent, setOpponent } = useOptionsContext();
+
+  const handleResetSelect = () => {
+    setCurrentPage(currentPage);
+    setGameMode(gameMode);
+    setOpponent(opponent);
+  };
+
+  const handleQuitSelect = () => {
+    setCurrentPage("mode");
+    setGameMode(undefined);
+  };
 
   return (
     <>
@@ -17,14 +35,17 @@ export const Game = () => {
         <div>{text.xTurn}</div>
         <div>{text.oTurn}</div>
       </div>
-      <div className="mx-auto mb-32 h-[768px] w-[768px] place-content-center bg-neutral-500 text-center">
+      <div className="mx-auto mb-16 h-[768px] w-[768px] place-content-center bg-neutral-500 text-center">
         Game Grid&#40;s&#41; here
       </div>
+      <div className="mb-16 text-center text-2xl font-bold uppercase">
+        {opponent ? currentOpponent[opponent] : ""}
+      </div>
       <div className="flex justify-center gap-4">
-        <Button type="small" onClick={() => setCurrentPage("game")}>
+        <Button type="small" onClick={handleResetSelect}>
           {text.resetButton}
         </Button>
-        <Button type="small" onClick={() => setCurrentPage("mode")}>
+        <Button type="small" onClick={handleQuitSelect}>
           {text.quitButton}
         </Button>
       </div>

@@ -1,4 +1,5 @@
 import { NavProvider } from "./components/contexts/NavContext";
+import { OptionsProvider } from "./components/contexts/OptionsContext";
 import { useNavContext } from "./components/hooks/useNavContext";
 import "./App.css";
 import { Header } from "./components/ui/header";
@@ -26,11 +27,13 @@ export const App = () => {
     <div className="rounded-3xl bg-neutral-200">
       <div className="fullscreen container mx-auto flex flex-col">
         <NavProvider>
-          <Header />
-          <main className="flex-grow place-content-center">
-            <PageContent />
-          </main>
-          <Footer />
+          <OptionsProvider>
+            <Header />
+            <main className="flex-grow place-content-center">
+              <PageContent />
+            </main>
+            <Footer />
+          </OptionsProvider>
         </NavProvider>
       </div>
     </div>

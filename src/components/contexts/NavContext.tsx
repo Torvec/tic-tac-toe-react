@@ -1,10 +1,16 @@
-import { createContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from "react";
 
 type Page = "mode" | "opponent" | "howToPlay" | "game";
 
 type NavContextType = {
   currentPage: Page;
-  setCurrentPage: React.Dispatch<React.SetStateAction<Page>>;
+  setCurrentPage: Dispatch<SetStateAction<Page>>;
 };
 
 type NavProviderProps = {
