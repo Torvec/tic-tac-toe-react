@@ -6,7 +6,7 @@ export const Game = () => {
     xTurn: "X's Turn",
     oTurn: "O's Turn",
     resetButton: "Reset",
-    startMenuButton: "Start Menu",
+    quitButton: "Quit",
   };
 
   const { setCurrentPage } = useNavContext();
@@ -17,7 +17,7 @@ export const Game = () => {
         <div>{text.xTurn}</div>
         <div>{text.oTurn}</div>
       </div>
-      <div className="mb-8 bg-neutral-500 w-[768px] h-[768px] place-content-center text-center mx-auto">
+      <div className="mx-auto mb-32 h-[768px] w-[768px] place-content-center bg-neutral-500 text-center">
         Game Grid&#40;s&#41; here
       </div>
       <div className="flex justify-center gap-4">
@@ -25,7 +25,7 @@ export const Game = () => {
           {text.resetButton}
         </Button>
         <Button type="small" onClick={() => setCurrentPage("mode")}>
-          {text.startMenuButton}
+          {text.quitButton}
         </Button>
       </div>
     </>

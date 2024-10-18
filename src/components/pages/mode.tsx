@@ -16,7 +16,7 @@ export const Mode = () => {
       <h2 className="mb-8 text-center font-mono text-4xl font-bold">
         {text.header}
       </h2>
-      <div className="mb-8 flex justify-center gap-4">
+      <div className="mb-32 flex justify-center gap-4">
         <Button type="large" onClick={() => setCurrentPage("opponent")}>
           {text.classicButton}
         </Button>

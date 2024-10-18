@@ -8,7 +8,7 @@ import { HowToPlay } from "./components/pages/howToPlay";
 import { Game } from "./components/pages/game";
 import { Footer } from "./components/ui/footer";
 
-const MainContent = () => {
+const PageContent = () => {
   const { currentPage } = useNavContext();
 
   const pages = {
@@ -25,13 +25,13 @@ export const App = () => {
   return (
     <div className="rounded-3xl bg-neutral-200">
       <div className="fullscreen container mx-auto flex flex-col">
-        <Header />
-        <main className="flex-grow place-content-center">
-          <NavProvider>
-            <MainContent />
-          </NavProvider>
-        </main>
-        <Footer />
+        <NavProvider>
+          <Header />
+          <main className="flex-grow place-content-center">
+            <PageContent />
+          </main>
+          <Footer />
+        </NavProvider>
       </div>
     </div>
   );
