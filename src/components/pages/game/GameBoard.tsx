@@ -1,7 +1,7 @@
 // import { useState } from "react";
 // import { Cell } from "./cell";
 import { GameGrid } from "./GameGrid";
-import { type Mode } from "../../contexts/OptionsContext";
+import { type Mode } from "../../contexts/GameModeContext";
 
 type BoardProps = {
   mode: Mode;

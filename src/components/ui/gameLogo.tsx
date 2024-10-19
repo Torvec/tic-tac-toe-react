@@ -1,9 +1,9 @@
-import { useOptionsContext } from "../hooks/useOptionsContext";
+import { useGameModeContext } from "../hooks/useGameModeContext";
 
 export const GameLogo = () => {
   const letters = ["T", "I", "C", "T", "A", "C", "T", "O", "E"];
-  const modes = { classic: "Classic", ultimate: "Ultimate", };
-  const { gameMode } = useOptionsContext();
+  const modes = { classic: "Classic", ultimate: "Ultimate" };
+  const { gameMode } = useGameModeContext();
 
   return (
     <>
@@ -18,7 +18,7 @@ export const GameLogo = () => {
         ))}
       </div>
       <div>
-        <h2 className="text-center text-2xl font-bold uppercase tracking-wide text-neutral-600 min-h-8">
+        <h2 className="min-h-8 text-center text-2xl font-bold uppercase tracking-wide text-neutral-600">
           {gameMode ? modes[gameMode] : ""}
         </h2>
       </div>

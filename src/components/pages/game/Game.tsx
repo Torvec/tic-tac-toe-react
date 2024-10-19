@@ -1,6 +1,6 @@
 import { Button } from "../../ui/button";
 import { useNavContext } from "../../hooks/useNavContext";
-import { useOptionsContext } from "../../hooks/useOptionsContext";
+import { useGameModeContext } from "../../hooks/useGameModeContext";
 import { PlayerIndicator } from "../../ui/playerIndicator";
 import { GameBoard } from "./GameBoard";
 
@@ -13,7 +13,7 @@ export const Game = () => {
   };
 
   const { currentPage, setCurrentPage } = useNavContext();
-  const { gameMode, setGameMode } = useOptionsContext();
+  const { gameMode, setGameMode } = useGameModeContext();
 
   // ! This doesn't seem to do anything at the moment, i need it to reset the whole board
   const handleResetSelect = () => {
