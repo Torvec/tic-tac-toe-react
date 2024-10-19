@@ -1,6 +1,7 @@
-import { Button } from "../ui/button";
-import { useNavContext } from "../hooks/useNavContext";
-import { useOptionsContext } from "../hooks/useOptionsContext";
+import { Button } from "../../ui/button";
+import { useNavContext } from "../../hooks/useNavContext";
+import { useOptionsContext } from "../../hooks/useOptionsContext";
+import { Board } from "./board";
 
 export const Game = () => {
   const text = {
@@ -35,9 +36,7 @@ export const Game = () => {
         <div>{text.xTurn}</div>
         <div>{text.oTurn}</div>
       </div>
-      <div className="mx-auto mb-16 h-[768px] w-[768px] place-content-center bg-neutral-500 text-center">
-        Game Grid&#40;s&#41; here
-      </div>
+      <Board mode={gameMode} />
       <div className="mb-16 text-center text-2xl font-bold uppercase">
         {opponent ? currentOpponent[opponent] : ""}
       </div>

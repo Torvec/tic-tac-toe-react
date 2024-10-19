@@ -6,9 +6,9 @@ import {
   SetStateAction,
 } from "react";
 
-type Mode = "classic" | "ultimate" | undefined;
+export type Mode = "classic" | "ultimate" | undefined;
 
-type Opponent = "pvp" | "pvc" | undefined;
+export type Opponent = "pvp" | "pvc" | undefined;
 
 type OptionsContextType = {
   gameMode: Mode;

@@ -18,7 +18,7 @@ export const GameLogo = () => {
         ))}
       </div>
       <div>
-        <h2 className="text-center text-2xl font-bold uppercase tracking-widest text-neutral-600">
+        <h2 className="text-center text-2xl font-bold uppercase tracking-widest text-neutral-600 min-h-8">
           {gameMode ? modes[gameMode] : ""}
         </h2>
       </div>
