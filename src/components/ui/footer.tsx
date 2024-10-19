@@ -7,12 +7,12 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="py-8 md:flex md:justify-center md:gap-4">
+    <footer className="py-16 md:flex md:justify-center md:gap-4">
       <div className="md:self-center">
         <img src="logo_bo.png" alt="My EV Logo" />
       </div>
-      <div className="text-2xl">
-        <p>
+      <div className="text-xl font-bold">
+        <p className="text-neutral-800">
           {text.year} {text.name}
         </p>
         <a className="text-orange-600" href={text.link}>

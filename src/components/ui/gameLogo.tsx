@@ -7,7 +7,7 @@ export const GameLogo = () => {
 
   return (
     <>
-      <div className="mx-auto grid h-32 w-32 grid-cols-3 grid-rows-3 gap-0.5">
+      <div className="mx-auto grid size-28 grid-cols-3 grid-rows-3 gap-0.5">
         {letters.map((letter, index) => (
           <h1
             key={index}
@@ -18,7 +18,7 @@ export const GameLogo = () => {
         ))}
       </div>
       <div>
-        <h2 className="text-center text-2xl font-bold uppercase tracking-widest text-neutral-600 min-h-8">
+        <h2 className="text-center text-2xl font-bold uppercase tracking-wide text-neutral-600 min-h-8">
           {gameMode ? modes[gameMode] : ""}
         </h2>
       </div>
