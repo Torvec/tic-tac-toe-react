@@ -6,7 +6,7 @@ import {
   SetStateAction,
 } from "react";
 
-type Page = "mode" | "opponent" | "howToPlay" | "game";
+type Page = "mode" | "howToPlay" | "game";
 
 type NavContextType = {
   currentPage: Page;

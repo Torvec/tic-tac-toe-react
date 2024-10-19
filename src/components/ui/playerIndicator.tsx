@@ -1,4 +1,3 @@
-// Need to know who is playing (PVP or PVC)
 // Need to know who's turn it is
 // Need to change which indicator is highlighted based on who's turn it is
 

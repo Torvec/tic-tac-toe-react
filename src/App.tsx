@@ -4,7 +4,6 @@ import { useNavContext } from "./components/hooks/useNavContext";
 import "./App.css";
 import { Header } from "./components/ui/header";
 import { Mode } from "./components/pages/mode";
-import { Opponent } from "./components/pages/opponent";
 import { HowToPlay } from "./components/pages/howToPlay";
 import { Game } from "./components/pages/game/Game";
 import { Footer } from "./components/ui/footer";
@@ -14,7 +13,6 @@ const PageContent = () => {
 
   const pages = {
     mode: <Mode />,
-    opponent: <Opponent />,
     howToPlay: <HowToPlay />,
     game: <Game />,
   };

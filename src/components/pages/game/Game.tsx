@@ -13,13 +13,12 @@ export const Game = () => {
   };
 
   const { currentPage, setCurrentPage } = useNavContext();
-  const { gameMode, setGameMode, opponent, setOpponent } = useOptionsContext();
+  const { gameMode, setGameMode } = useOptionsContext();
 
   // ! This doesn't seem to do anything at the moment, i need it to reset the whole board
   const handleResetSelect = () => {
     setCurrentPage(currentPage);
     setGameMode(gameMode);
-    setOpponent(opponent);
   };
 
   const handleQuitSelect = () => {
