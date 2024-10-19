@@ -23,10 +23,10 @@ export const Mode = () => {
       </h2>
       <div className="mb-32 flex justify-center gap-4">
         <Button type="large" onClick={handleClassicModeSelect}>
-          Classic Mode
+          Classic
         </Button>
         <Button type="large" onClick={handleUltimateModeSelect}>
-          Ultimate Mode
+          Ultimate
         </Button>
       </div>
       <div className="flex justify-center">
