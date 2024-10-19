@@ -1,11 +1,13 @@
 # Tic Tac Toe in React + TypeScript + Vite + TailwindCSS
-What was initially a vanilla javascript project is now going to be a React + TypeScript + Vite + TailwindCSS project. I'm going to use my two previous projects that were split from the original version of this project and they can be found here:
+What was initially a vanilla javascript project is now a React + TypeScript + Vite + TailwindCSS project. This project is a combination of my two previous Tic Tac Toe projects but made with React and TypeScript. 
+
+My previous projects:
 - [Tic Tac Toe Classic](https://github.com/Torvec/tic-tac-toe-ultimate)
 - [Tic Tac Toe Ultimate](https://github.com/Torvec/tic-tac-toe-classic)
 
 ## Features
 - Play classic Tic Tac Toe on a 3x3 grid or play ultimate Tic Tac Toe on a 9 x 3 x 3 grid.
-- Play against a friend (locally) or against the computer.
+- Play against a friend (locally)
 - Playable with mouse or touch enabled devices.
 
 ## Play Now
