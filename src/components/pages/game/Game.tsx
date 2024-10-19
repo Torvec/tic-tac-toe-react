@@ -1,16 +1,9 @@
 import { Button } from "../../ui/button";
 import { useNavContext } from "../../hooks/useNavContext";
 import { useGameModeContext } from "../../hooks/useGameModeContext";
-import { PlayerIndicator } from "../../ui/playerIndicator";
 import { GameBoard } from "./GameBoard";
 
 export const Game = () => {
-  const text = {
-    xTurn: "X's Turn",
-    oTurn: "O's Turn",
-    resetButton: "Reset",
-    quitButton: "Quit",
-  };
 
   const { currentPage, setCurrentPage } = useNavContext();
   const { gameMode, setGameMode } = useGameModeContext();
@@ -28,14 +21,13 @@ export const Game = () => {
 
   return (
     <>
-      <PlayerIndicator />
-      <GameBoard mode={gameMode} />
+      <GameBoard />
       <div className="flex justify-center gap-4">
         <Button type="small" onClick={handleResetSelect}>
-          {text.resetButton}
+          Reset
         </Button>
         <Button type="small" onClick={handleQuitSelect}>
-          {text.quitButton}
+          Quit
         </Button>
       </div>
     </>

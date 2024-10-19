@@ -6,7 +6,7 @@ export const GameLogo = () => {
   const { gameMode } = useGameModeContext();
 
   return (
-    <>
+    <div>
       <div className="mx-auto grid size-28 grid-cols-3 grid-rows-3 gap-0.5">
         {letters.map((letter, index) => (
           <h1
@@ -22,6 +22,6 @@ export const GameLogo = () => {
           {gameMode ? modes[gameMode] : ""}
         </h2>
       </div>
-    </>
+    </div>
   );
 };

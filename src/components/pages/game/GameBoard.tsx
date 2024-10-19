@@ -1,13 +1,10 @@
 // import { useState } from "react";
 // import { Cell } from "./cell";
 import { GameGrid } from "./GameGrid";
-import { type Mode } from "../../contexts/GameModeContext";
+import { useGameModeContext } from "../../hooks/useGameModeContext";
 
-type BoardProps = {
-  mode: Mode;
-};
-
-export const GameBoard = ({ mode }: BoardProps) => {
+export const GameBoard = () => {
+  const { gameMode } = useGameModeContext();
   const classicGrids = Array.from({ length: 1 }, (_, i) => (
     <GameGrid key={i} />
   ));
@@ -24,8 +21,8 @@ export const GameBoard = ({ mode }: BoardProps) => {
   };
   return (
     <div className="mx-auto mb-8 aspect-square h-auto w-1/2 rounded-xl bg-neutral-600">
-      <div className={mode ? classNames[mode] : undefined}>
-        {mode ? setupBoard[mode] : undefined}
+      <div className={gameMode ? classNames[gameMode] : undefined}>
+        {gameMode ? setupBoard[gameMode] : undefined}
       </div>
     </div>
   );
