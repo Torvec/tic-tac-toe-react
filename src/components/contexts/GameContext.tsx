@@ -1,4 +1,3 @@
-// src/components/contexts/GameContext.tsx
 import {
   createContext,
   useState,

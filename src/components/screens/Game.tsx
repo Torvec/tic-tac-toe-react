@@ -103,6 +103,7 @@ const ButtonMenu = () => {
 };
 
 export const Game = () => {
+  
   return (
     <>
       <GameBoard />
