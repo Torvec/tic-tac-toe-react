@@ -4,7 +4,7 @@ import { createContext, ReactNode, Dispatch, useReducer } from "react";
 
 type Screen = "gameModeSelect" | "howToPlay" | "game";
 type GameMode = "classic" | "ultimate" | undefined;
-type Player = "X" | "O" | undefined;
+type Player = "X" | "O";
 type GameGrid = "active" | "inactive" | "X" | "O" | "draw";
 type GameBoard = "play" | "Won" | "Draw";
 
@@ -73,7 +73,7 @@ type GameStateProviderProps = {
 const initialState: State = {
   currentScreen: "gameModeSelect",
   gameMode: undefined,
-  currentPlayer: undefined,
+  currentPlayer: "X",
   gameGridState: "active",
   gameBoardState: "play",
   reset: false,

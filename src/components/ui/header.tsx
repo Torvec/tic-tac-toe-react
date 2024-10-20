@@ -4,10 +4,10 @@ import { useGameStateContext } from "../hooks/useGameStateContext";
 
 export const Header = () => {
   const { state } = useGameStateContext();
-  const { currentPlayer } = state;
+  const { gameMode, currentPlayer } = state;
   return (
     <>
-      {currentPlayer ? (
+      {gameMode ? (
         <header className="mx-auto grid w-1/2 grid-cols-3 grid-rows-1 items-center py-8">
           {currentPlayer === "X" ? (
             <PlayerX />

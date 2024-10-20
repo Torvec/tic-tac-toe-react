@@ -19,12 +19,10 @@ const GameCell = ({ resetGame }: GameCellProps) => {
 
   const handleClick = () => {
     if (cellState === " ") {
-      const currentPlayer = state.currentPlayer;
-      if (currentPlayer) {
-        setCellState(currentPlayer);
-        const nextPlayer = currentPlayer === "X" ? "O" : "X";
-        dispatch({ type: "setCurrentPlayer", payload: nextPlayer });
-      }
+      const { currentPlayer } = state;
+      setCellState(currentPlayer);
+      const nextPlayer = currentPlayer === "X" ? "O" : "X";
+      dispatch({ type: "setCurrentPlayer", payload: nextPlayer });
     }
   };
 
@@ -92,7 +90,7 @@ const ButtonMenu = () => {
         onClick={() => {
           dispatch({ type: "setCurrentScreen", payload: "gameModeSelect" });
           dispatch({ type: "setGameMode", payload: undefined });
-          dispatch({ type: "setCurrentPlayer", payload: undefined });
+          dispatch({ type: "setCurrentPlayer", payload: "X" });
         }}
       >
         Back
