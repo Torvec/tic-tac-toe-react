@@ -2,7 +2,7 @@ import { Button } from "../ui/button";
 import { useGameStateContext } from "../hooks/useGameStateContext";
 
 export const GameModeSelect = () => {
-  const { setGameMode, setCurrentScreen } = useGameStateContext();
+  const { dispatch } = useGameStateContext();
 
   return (
     <>
@@ -10,8 +10,8 @@ export const GameModeSelect = () => {
         <Button
           type="large"
           onClick={() => {
-            setGameMode("classic");
-            setCurrentScreen("game");
+            dispatch({ type: "setGameMode", payload: "classic" });
+            dispatch({ type: "setCurrentScreen", payload: "game" });
           }}
         >
           Classic <br /> Mode
@@ -19,15 +19,20 @@ export const GameModeSelect = () => {
         <Button
           type="large"
           onClick={() => {
-            setGameMode("ultimate");
-            setCurrentScreen("game");
+            dispatch({ type: "setGameMode", payload: "ultimate" });
+            dispatch({ type: "setCurrentScreen", payload: "game" });
           }}
         >
           Ultimate <br /> Mode
         </Button>
       </div>
       <div className="flex justify-center">
-        <Button type="small" onClick={() => setCurrentScreen("howToPlay")}>
+        <Button
+          type="small"
+          onClick={() =>
+            dispatch({ type: "setCurrentScreen", payload: "howToPlay" })
+          }
+        >
           How To Play
         </Button>
       </div>

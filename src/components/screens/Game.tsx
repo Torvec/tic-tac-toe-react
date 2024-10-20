@@ -3,27 +3,28 @@ import { Button } from "../ui/button";
 import { useGameStateContext } from "../hooks/useGameStateContext";
 
 type GameCellProps = {
-  reset: boolean;
+  resetGame: boolean;
 };
 
-const GameCell = ({ reset }: GameCellProps) => {
-  const { currentPlayer, setCurrentPlayer, completeReset } =
-    useGameStateContext();
+const GameCell = ({ resetGame }: GameCellProps) => {
+  const { state, dispatch } = useGameStateContext();
   const [cellState, setCellState] = useState<" " | "X" | "O">(" ");
 
   useEffect(() => {
-    if (reset) {
+    if (resetGame) {
       setCellState(" ");
-      completeReset();
+      dispatch({ type: "completeReset" });
     }
-  }, [reset, completeReset]);
+  }, [resetGame, dispatch]);
 
   const handleClick = () => {
     if (cellState === " ") {
-      //! FIGURE OUT A FIX FOR THIS
-      // @ts-expect-error - currentPlayer is only undefined when not in game mode
-      setCellState(currentPlayer);
-      setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+      const currentPlayer = state.currentPlayer;
+      if (currentPlayer) {
+        setCellState(currentPlayer);
+        const nextPlayer = currentPlayer === "X" ? "O" : "X";
+        dispatch({ type: "setCurrentPlayer", payload: nextPlayer });
+      }
     }
   };
 
@@ -38,10 +39,11 @@ const GameCell = ({ reset }: GameCellProps) => {
 };
 
 const GameGrid = () => {
-  const { reset } = useGameStateContext();
+  const { state } = useGameStateContext();
+  const { reset } = state;
 
   const cells = Array.from({ length: 9 }, (_, i) => (
-    <GameCell key={i} reset={reset} />
+    <GameCell key={i} resetGame={reset} />
   ));
 
   return (
@@ -50,11 +52,12 @@ const GameGrid = () => {
 };
 
 const GameBoard = () => {
-  const { setCurrentPlayer, gameMode } = useGameStateContext();
+  const { state, dispatch } = useGameStateContext();
+  const { gameMode } = state;
 
   useEffect(() => {
-    setCurrentPlayer("X");
-  }, [gameMode, setCurrentPlayer]);
+    dispatch({ type: "setCurrentPlayer", payload: "X" });
+  }, [dispatch, gameMode]);
 
   let grids: JSX.Element[] = [];
   let className = "";
@@ -78,19 +81,18 @@ const GameBoard = () => {
 };
 
 const ButtonMenu = () => {
-  const { triggerReset, setCurrentPlayer, setCurrentScreen, setGameMode } =
-    useGameStateContext();
+  const { dispatch } = useGameStateContext();
   return (
     <div className="flex justify-center gap-4">
-      <Button type="small" onClick={triggerReset}>
+      <Button type="small" onClick={() => dispatch({ type: "triggerReset" })}>
         Reset
       </Button>
       <Button
         type="small"
         onClick={() => {
-          setCurrentScreen("gameModeSelect");
-          setGameMode(undefined);
-          setCurrentPlayer(undefined);
+          dispatch({ type: "setCurrentScreen", payload: "gameModeSelect" });
+          dispatch({ type: "setGameMode", payload: undefined });
+          dispatch({ type: "setCurrentPlayer", payload: undefined });
         }}
       >
         Back

@@ -8,7 +8,8 @@ import { Game } from "./components/screens/Game";
 import { Footer } from "./components/ui/footer";
 
 const Screen = () => {
-  const { currentScreen } = useGameStateContext();
+  const { state } = useGameStateContext();
+  const { currentScreen } = state;
 
   switch (currentScreen) {
     case "gameModeSelect":

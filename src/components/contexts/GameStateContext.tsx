@@ -1,80 +1,89 @@
-import {
-  createContext,
-  useState,
-  ReactNode,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import { createContext, ReactNode, Dispatch, useReducer } from "react";
+
+// All possible types for each game state except for Game Cells
 
 type Screen = "gameModeSelect" | "howToPlay" | "game";
-
 type GameMode = "classic" | "ultimate" | undefined;
-
 type Player = "X" | "O" | undefined;
-
 type GameGrid = "active" | "inactive" | "X" | "O" | "draw";
-
 type GameBoard = "play" | "Won" | "Draw";
 
-type GameStateContextType = {
-  currentScreen: Screen;
-  setCurrentScreen: Dispatch<SetStateAction<Screen>>;
-  gameMode: GameMode;
-  setGameMode: Dispatch<SetStateAction<GameMode>>;
-  currentPlayer: Player;
-  setCurrentPlayer: Dispatch<SetStateAction<Player>>;
-  gameGridState: GameGrid;
-  setGameGridState: Dispatch<SetStateAction<GameGrid>>;
-  gameBoardState: GameBoard;
-  setGameBoardState: Dispatch<SetStateAction<GameBoard>>;
-  reset: boolean;
-  triggerReset: () => void;
-  completeReset: () => void;
-};
+// Game State Context
 
-type GameStateProviderProps = {
-  children: ReactNode;
+type GameStateContextType = {
+  state: State;
+  dispatch: Dispatch<Action>;
 };
 
 export const GameStateContext = createContext<GameStateContextType | undefined>(
   undefined,
 );
 
+// Game State Reducer
+
+type State = {
+  currentScreen: Screen;
+  gameMode: GameMode;
+  currentPlayer: Player;
+  gameGridState: GameGrid;
+  gameBoardState: GameBoard;
+  reset: boolean;
+};
+
+type Action =
+  | { type: "setCurrentScreen"; payload: Screen }
+  | { type: "setGameMode"; payload: GameMode }
+  | { type: "setCurrentPlayer"; payload: Player }
+  | { type: "setGridState"; payload: GameGrid }
+  | { type: "setGameBoardState"; payload: GameBoard }
+  | { type: "triggerReset" }
+  | { type: "completeReset" };
+
+function gameStateReducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "setCurrentScreen":
+      return { ...state, currentScreen: action.payload };
+    case "setGameMode":
+      return { ...state, gameMode: action.payload };
+    case "setCurrentPlayer":
+      return { ...state, currentPlayer: action.payload };
+    case "setGridState":
+      return { ...state, gameGridState: action.payload };
+    case "setGameBoardState":
+      return { ...state, gameBoardState: action.payload };
+    case "triggerReset":
+      return {
+        ...state,
+        reset: true,
+        currentPlayer: "X",
+        gameGridState: "active",
+        gameBoardState: "play",
+      };
+    case "completeReset":
+      return { ...state, reset: false };
+  }
+}
+
+// Game State Provider
+
+type GameStateProviderProps = {
+  children: ReactNode;
+};
+
+const initialState: State = {
+  currentScreen: "gameModeSelect",
+  gameMode: undefined,
+  currentPlayer: undefined,
+  gameGridState: "active",
+  gameBoardState: "play",
+  reset: false,
+};
+
 export const GameStateProvider = ({ children }: GameStateProviderProps) => {
-  const [currentScreen, setCurrentScreen] = useState<Screen>("gameModeSelect");
-  const [gameMode, setGameMode] = useState<GameMode>(undefined);
-  const [currentPlayer, setCurrentPlayer] = useState<Player>(undefined);
-  const [gameGridState, setGameGridState] = useState<GameGrid>("active");
-  const [gameBoardState, setGameBoardState] = useState<GameBoard>("play");
-  const [reset, setReset] = useState(false);
-  const triggerReset = () => {
-    setReset(true);
-    setCurrentPlayer("X");
-    setGameGridState("active");
-    setGameBoardState("play");
-  };
-  const completeReset = () => {
-    setReset(false);
-  };
+  const [state, dispatch] = useReducer(gameStateReducer, initialState);
 
   return (
-    <GameStateContext.Provider
-      value={{
-        currentScreen,
-        setCurrentScreen,
-        gameMode,
-        setGameMode,
-        currentPlayer,
-        setCurrentPlayer,
-        gameGridState,
-        setGameGridState,
-        gameBoardState,
-        setGameBoardState,
-        reset,
-        triggerReset,
-        completeReset,
-      }}
-    >
+    <GameStateContext.Provider value={{ state, dispatch }}>
       {children}
     </GameStateContext.Provider>
   );

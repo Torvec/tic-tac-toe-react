@@ -3,7 +3,8 @@ import { useGameStateContext } from "../hooks/useGameStateContext";
 export const GameLogo = () => {
   const letters = ["T", "I", "C", "T", "A", "C", "T", "O", "E"];
   const modes = { classic: "Classic", ultimate: "Ultimate" };
-  const { gameMode } = useGameStateContext();
+  const { state } = useGameStateContext();
+  const { gameMode } = state;
 
   return (
     <div>

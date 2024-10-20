@@ -3,7 +3,8 @@ import { PlayerX, PlayerO } from "./playerIndicator";
 import { useGameStateContext } from "../hooks/useGameStateContext";
 
 export const Header = () => {
-  const { currentPlayer } = useGameStateContext();
+  const { state } = useGameStateContext();
+  const { currentPlayer } = state;
   return (
     <>
       {currentPlayer ? (
