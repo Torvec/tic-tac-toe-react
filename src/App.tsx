@@ -1,18 +1,18 @@
-import { NavProvider } from "./components/contexts/NavContext";
-import { GameModeProvider } from "./components/contexts/GameModeContext";
-import { useNavContext } from "./components/hooks/useNavContext";
 import "./App.css";
-import { Header } from "./components/ui/header";
-import { GameModeSelect } from "./components/pages/GameModeSelect";
-import { HowToPlay } from "./components/pages/HowToPlay";
-import { Game } from "./components/pages/Game";
-import { Footer } from "./components/ui/footer";
+import { GameModeProvider } from "./components/contexts/GameModeContext";
 import { GameProvider } from "./components/contexts/GameContext";
+import { Header } from "./components/ui/header";
+import { NavProvider } from "./components/contexts/NavContext";
+import { useNavContext } from "./components/hooks/useNavContext";
+import { GameModeSelect } from "./components/screens/GameModeSelect";
+import { HowToPlay } from "./components/screens/HowToPlay";
+import { Game } from "./components/screens/Game";
+import { Footer } from "./components/ui/footer";
 
-const PageContent = () => {
-  const { currentPage } = useNavContext();
+const Screen = () => {
+  const { currentScreen } = useNavContext();
 
-  switch (currentPage) {
+  switch (currentScreen) {
     case "gameModeSelect":
       return <GameModeSelect />;
     case "howToPlay":
@@ -23,18 +23,19 @@ const PageContent = () => {
 };
 
 export const App = () => {
+  
   return (
     <div className="rounded-3xl bg-neutral-200">
       <div className="fullscreen container mx-auto flex flex-col">
         <GameModeProvider>
-          <Header />
-          <NavProvider>
-            <GameProvider>
+          <GameProvider>
+            <Header />
+            <NavProvider>
               <main className="flex-grow place-content-center">
-                <PageContent />
+                <Screen />
               </main>
-            </GameProvider>
-          </NavProvider>
+            </NavProvider>
+          </GameProvider>
         </GameModeProvider>
         <Footer />
       </div>

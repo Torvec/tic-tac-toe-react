@@ -6,11 +6,11 @@ import {
   SetStateAction,
 } from "react";
 
-type Page = "gameModeSelect" | "howToPlay" | "game";
+type Screen = "gameModeSelect" | "howToPlay" | "game";
 
 type NavContextType = {
-  currentPage: Page;
-  setCurrentPage: Dispatch<SetStateAction<Page>>;
+  currentScreen: Screen;
+  setCurrentScreen: Dispatch<SetStateAction<Screen>>;
 };
 
 type NavProviderProps = {
@@ -20,10 +20,10 @@ type NavProviderProps = {
 export const NavContext = createContext<NavContextType | undefined>(undefined);
 
 export const NavProvider = ({ children }: NavProviderProps) => {
-  const [currentPage, setCurrentPage] = useState<Page>("gameModeSelect");
+  const [currentScreen, setCurrentScreen] = useState<Screen>("gameModeSelect");
 
   return (
-    <NavContext.Provider value={{ currentPage, setCurrentPage }}>
+    <NavContext.Provider value={{ currentScreen, setCurrentScreen }}>
       {children}
     </NavContext.Provider>
   );

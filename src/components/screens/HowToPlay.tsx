@@ -2,7 +2,7 @@ import { Button } from "../ui/button";
 import { useNavContext } from "../hooks/useNavContext";
 
 export const HowToPlay = () => {
-  const { setCurrentPage } = useNavContext();
+  const { setCurrentScreen } = useNavContext();
 
   return (
     <>
@@ -59,7 +59,7 @@ export const HowToPlay = () => {
         </div>
       </div>
       <div className="flex justify-center">
-        <Button type="small" onClick={() => setCurrentPage("gameModeSelect")}>
+        <Button type="small" onClick={() => setCurrentScreen("gameModeSelect")}>
           Back
         </Button>
       </div>

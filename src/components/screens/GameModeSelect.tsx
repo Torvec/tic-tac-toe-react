@@ -3,7 +3,7 @@ import { useNavContext } from "../hooks/useNavContext";
 import { useGameModeContext } from "../hooks/useGameModeContext";
 
 export const GameModeSelect = () => {
-  const { setCurrentPage } = useNavContext();
+  const { setCurrentScreen } = useNavContext();
   const { setGameMode } = useGameModeContext();
 
   return (
@@ -13,7 +13,7 @@ export const GameModeSelect = () => {
           type="large"
           onClick={() => {
             setGameMode("classic");
-            setCurrentPage("game");
+            setCurrentScreen("game");
           }}
         >
           Classic <br /> Mode
@@ -22,14 +22,14 @@ export const GameModeSelect = () => {
           type="large"
           onClick={() => {
             setGameMode("ultimate");
-            setCurrentPage("game");
+            setCurrentScreen("game");
           }}
         >
           Ultimate <br /> Mode
         </Button>
       </div>
       <div className="flex justify-center">
-        <Button type="small" onClick={() => setCurrentPage("howToPlay")}>
+        <Button type="small" onClick={() => setCurrentScreen("howToPlay")}>
           How To Play
         </Button>
       </div>

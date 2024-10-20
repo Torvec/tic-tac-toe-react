@@ -7,7 +7,7 @@ import {
   SetStateAction,
 } from "react";
 
-type Player = "X" | "O";
+type Player = "X" | "O" | undefined;
 
 type GameGrid = "active" | "inactive" | "X" | "O" | "draw";
 
@@ -34,7 +34,7 @@ export const GameContext = createContext<GameContextType | undefined>(
 );
 
 export const GameProvider = ({ children }: GameProviderProps) => {
-  const [currentPlayer, setCurrentPlayer] = useState<Player>("X");
+  const [currentPlayer, setCurrentPlayer] = useState<Player>(undefined);
   const [gameGridState, setGameGridState] = useState<GameGrid>("active");
   const [gameBoardState, setGameBoardState] = useState<GameBoard>("play");
   const [reset, setReset] = useState(false);

@@ -21,6 +21,8 @@ const GameCell = ({ reset }: GameCellProps) => {
 
   const handleClick = () => {
     if (cellState === " ") {
+      //! FIGURE OUT A FIX FOR THIS
+      // @ts-expect-error - currentPlayer is only undefined when not in game mode
       setCellState(currentPlayer);
       setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
     }
@@ -50,6 +52,11 @@ const GameGrid = () => {
 
 const GameBoard = () => {
   const { gameMode } = useGameModeContext();
+  const { setCurrentPlayer } = useGameContext();
+
+  useEffect(() => {
+    setCurrentPlayer("X");
+  }, [gameMode, setCurrentPlayer]);
 
   let grids: JSX.Element[] = [];
   let className = "";
@@ -73,9 +80,9 @@ const GameBoard = () => {
 };
 
 const ButtonMenu = () => {
-  const { setCurrentPage } = useNavContext();
+  const { setCurrentScreen } = useNavContext();
   const { setGameMode } = useGameModeContext();
-  const { triggerReset } = useGameContext();
+  const { triggerReset, setCurrentPlayer } = useGameContext();
   return (
     <div className="flex justify-center gap-4">
       <Button type="small" onClick={triggerReset}>
@@ -84,8 +91,9 @@ const ButtonMenu = () => {
       <Button
         type="small"
         onClick={() => {
-          setCurrentPage("gameModeSelect");
+          setCurrentScreen("gameModeSelect");
           setGameMode(undefined);
+          setCurrentPlayer(undefined);
         }}
       >
         Back
@@ -95,7 +103,6 @@ const ButtonMenu = () => {
 };
 
 export const Game = () => {
-  
   return (
     <>
       <GameBoard />

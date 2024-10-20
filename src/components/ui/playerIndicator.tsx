@@ -1,6 +1,3 @@
-// Need to know who's turn it is
-// Need to change which indicator is highlighted based on who's turn it is
-
 export const PlayerX = () => {
   return (
     <div className="text-center font-mono font-bold uppercase text-blue-700">
