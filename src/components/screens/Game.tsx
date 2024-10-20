@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { useNavContext } from "../hooks/useNavContext";
-import { useGameModeContext } from "../hooks/useGameModeContext";
-import { useGameContext } from "../hooks/useGameContext";
+import { useGameStateContext } from "../hooks/useGameStateContext";
 
 type GameCellProps = {
   reset: boolean;
 };
 
 const GameCell = ({ reset }: GameCellProps) => {
-  const { currentPlayer, setCurrentPlayer, completeReset } = useGameContext();
+  const { currentPlayer, setCurrentPlayer, completeReset } =
+    useGameStateContext();
   const [cellState, setCellState] = useState<" " | "X" | "O">(" ");
 
   useEffect(() => {
@@ -39,7 +38,7 @@ const GameCell = ({ reset }: GameCellProps) => {
 };
 
 const GameGrid = () => {
-  const { reset } = useGameContext();
+  const { reset } = useGameStateContext();
 
   const cells = Array.from({ length: 9 }, (_, i) => (
     <GameCell key={i} reset={reset} />
@@ -51,8 +50,7 @@ const GameGrid = () => {
 };
 
 const GameBoard = () => {
-  const { gameMode } = useGameModeContext();
-  const { setCurrentPlayer } = useGameContext();
+  const { setCurrentPlayer, gameMode } = useGameStateContext();
 
   useEffect(() => {
     setCurrentPlayer("X");
@@ -80,9 +78,8 @@ const GameBoard = () => {
 };
 
 const ButtonMenu = () => {
-  const { setCurrentScreen } = useNavContext();
-  const { setGameMode } = useGameModeContext();
-  const { triggerReset, setCurrentPlayer } = useGameContext();
+  const { triggerReset, setCurrentPlayer, setCurrentScreen, setGameMode } =
+    useGameStateContext();
   return (
     <div className="flex justify-center gap-4">
       <Button type="small" onClick={triggerReset}>
@@ -103,7 +100,6 @@ const ButtonMenu = () => {
 };
 
 export const Game = () => {
-  
   return (
     <>
       <GameBoard />

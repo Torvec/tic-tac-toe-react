@@ -6,13 +6,21 @@ import {
   SetStateAction,
 } from "react";
 
+type Screen = "gameModeSelect" | "howToPlay" | "game";
+
+type GameMode = "classic" | "ultimate" | undefined;
+
 type Player = "X" | "O" | undefined;
 
 type GameGrid = "active" | "inactive" | "X" | "O" | "draw";
 
 type GameBoard = "play" | "Won" | "Draw";
 
-type GameContextType = {
+type GameStateContextType = {
+  currentScreen: Screen;
+  setCurrentScreen: Dispatch<SetStateAction<Screen>>;
+  gameMode: GameMode;
+  setGameMode: Dispatch<SetStateAction<GameMode>>;
   currentPlayer: Player;
   setCurrentPlayer: Dispatch<SetStateAction<Player>>;
   gameGridState: GameGrid;
@@ -24,15 +32,17 @@ type GameContextType = {
   completeReset: () => void;
 };
 
-type GameProviderProps = {
+type GameStateProviderProps = {
   children: ReactNode;
 };
 
-export const GameContext = createContext<GameContextType | undefined>(
+export const GameStateContext = createContext<GameStateContextType | undefined>(
   undefined,
 );
 
-export const GameProvider = ({ children }: GameProviderProps) => {
+export const GameStateProvider = ({ children }: GameStateProviderProps) => {
+  const [currentScreen, setCurrentScreen] = useState<Screen>("gameModeSelect");
+  const [gameMode, setGameMode] = useState<GameMode>(undefined);
   const [currentPlayer, setCurrentPlayer] = useState<Player>(undefined);
   const [gameGridState, setGameGridState] = useState<GameGrid>("active");
   const [gameBoardState, setGameBoardState] = useState<GameBoard>("play");
@@ -48,8 +58,12 @@ export const GameProvider = ({ children }: GameProviderProps) => {
   };
 
   return (
-    <GameContext.Provider
+    <GameStateContext.Provider
       value={{
+        currentScreen,
+        setCurrentScreen,
+        gameMode,
+        setGameMode,
         currentPlayer,
         setCurrentPlayer,
         gameGridState,
@@ -62,6 +76,6 @@ export const GameProvider = ({ children }: GameProviderProps) => {
       }}
     >
       {children}
-    </GameContext.Provider>
+    </GameStateContext.Provider>
   );
 };

@@ -1,9 +1,9 @@
 import { GameLogo } from "./gameLogo";
 import { PlayerX, PlayerO } from "./playerIndicator";
-import { useGameContext } from "../hooks/useGameContext";
+import { useGameStateContext } from "../hooks/useGameStateContext";
 
 export const Header = () => {
-  const { currentPlayer } = useGameContext();
+  const { currentPlayer } = useGameStateContext();
   return (
     <>
       {currentPlayer ? (

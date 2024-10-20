@@ -1,9 +1,9 @@
-import { useGameModeContext } from "../hooks/useGameModeContext";
+import { useGameStateContext } from "../hooks/useGameStateContext";
 
 export const GameLogo = () => {
   const letters = ["T", "I", "C", "T", "A", "C", "T", "O", "E"];
   const modes = { classic: "Classic", ultimate: "Ultimate" };
-  const { gameMode } = useGameModeContext();
+  const { gameMode } = useGameStateContext();
 
   return (
     <div>

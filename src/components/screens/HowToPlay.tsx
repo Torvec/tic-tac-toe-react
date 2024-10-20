@@ -1,8 +1,8 @@
 import { Button } from "../ui/button";
-import { useNavContext } from "../hooks/useNavContext";
+import { useGameStateContext } from "../hooks/useGameStateContext";
 
 export const HowToPlay = () => {
-  const { setCurrentScreen } = useNavContext();
+  const { setCurrentScreen } = useGameStateContext();
 
   return (
     <>
