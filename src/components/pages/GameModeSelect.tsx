@@ -6,27 +6,26 @@ export const GameModeSelect = () => {
   const { setCurrentPage } = useNavContext();
   const { setGameMode } = useGameModeContext();
 
-  const handleClassicModeSelect = () => {
-    setGameMode("classic");
-    setCurrentPage("game");
-  };
-
-  const handleUltimateModeSelect = () => {
-    setGameMode("ultimate");
-    setCurrentPage("game");
-  };
-
   return (
     <>
-      <h2 className="mb-8 text-center font-mono text-4xl font-bold">
-        Select Mode
-      </h2>
       <div className="mb-32 flex justify-center gap-4">
-        <Button type="large" onClick={handleClassicModeSelect}>
-          Classic
+        <Button
+          type="large"
+          onClick={() => {
+            setGameMode("classic");
+            setCurrentPage("game");
+          }}
+        >
+          Classic <br /> Mode
         </Button>
-        <Button type="large" onClick={handleUltimateModeSelect}>
-          Ultimate
+        <Button
+          type="large"
+          onClick={() => {
+            setGameMode("ultimate");
+            setCurrentPage("game");
+          }}
+        >
+          Ultimate <br /> Mode
         </Button>
       </div>
       <div className="flex justify-center">

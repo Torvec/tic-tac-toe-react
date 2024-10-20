@@ -4,8 +4,8 @@ import { useNavContext } from "./components/hooks/useNavContext";
 import "./App.css";
 import { Header } from "./components/ui/header";
 import { GameModeSelect } from "./components/pages/GameModeSelect";
-import { HowToPlay } from "./components/pages/howToPlay";
-import { Game } from "./components/pages/game/Game";
+import { HowToPlay } from "./components/pages/HowToPlay";
+import { Game } from "./components/pages/Game";
 import { Footer } from "./components/ui/footer";
 import { GameProvider } from "./components/contexts/GameContext";
 

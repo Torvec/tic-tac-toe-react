@@ -59,7 +59,7 @@ export const HowToPlay = () => {
         </div>
       </div>
       <div className="flex justify-center">
-        <Button type="small" onClick={() => setCurrentPage("mode")}>
+        <Button type="small" onClick={() => setCurrentPage("gameModeSelect")}>
           Back
         </Button>
       </div>
