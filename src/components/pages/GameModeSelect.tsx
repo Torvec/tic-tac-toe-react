@@ -2,7 +2,7 @@ import { Button } from "../ui/button";
 import { useNavContext } from "../hooks/useNavContext";
 import { useGameModeContext } from "../hooks/useGameModeContext";
 
-export const Mode = () => {
+export const GameModeSelect = () => {
   const { setCurrentPage } = useNavContext();
   const { setGameMode } = useGameModeContext();
 

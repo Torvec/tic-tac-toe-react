@@ -6,7 +6,7 @@ import {
   SetStateAction,
 } from "react";
 
-export type GameMode = "classic" | "ultimate" | undefined;
+type GameMode = "classic" | "ultimate" | undefined;
 
 type GameModeContextType = {
   gameMode: GameMode;

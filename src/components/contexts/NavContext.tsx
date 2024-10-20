@@ -6,7 +6,7 @@ import {
   SetStateAction,
 } from "react";
 
-type Page = "mode" | "howToPlay" | "game";
+type Page = "gameModeSelect" | "howToPlay" | "game";
 
 type NavContextType = {
   currentPage: Page;
@@ -20,7 +20,7 @@ type NavProviderProps = {
 export const NavContext = createContext<NavContextType | undefined>(undefined);
 
 export const NavProvider = ({ children }: NavProviderProps) => {
-  const [currentPage, setCurrentPage] = useState<Page>("mode");
+  const [currentPage, setCurrentPage] = useState<Page>("gameModeSelect");
 
   return (
     <NavContext.Provider value={{ currentPage, setCurrentPage }}>

@@ -3,21 +3,23 @@ import { GameModeProvider } from "./components/contexts/GameModeContext";
 import { useNavContext } from "./components/hooks/useNavContext";
 import "./App.css";
 import { Header } from "./components/ui/header";
-import { Mode } from "./components/pages/mode";
+import { GameModeSelect } from "./components/pages/GameModeSelect";
 import { HowToPlay } from "./components/pages/howToPlay";
 import { Game } from "./components/pages/game/Game";
 import { Footer } from "./components/ui/footer";
+import { GameProvider } from "./components/contexts/GameContext";
 
 const PageContent = () => {
   const { currentPage } = useNavContext();
 
-  const pages = {
-    mode: <Mode />,
-    howToPlay: <HowToPlay />,
-    game: <Game />,
-  };
-
-  return pages[currentPage];
+  switch (currentPage) {
+    case "gameModeSelect":
+      return <GameModeSelect />;
+    case "howToPlay":
+      return <HowToPlay />;
+    case "game":
+      return <Game />;
+  }
 };
 
 export const App = () => {
@@ -27,9 +29,11 @@ export const App = () => {
         <GameModeProvider>
           <Header />
           <NavProvider>
-            <main className="flex-grow place-content-center">
-              <PageContent />
-            </main>
+            <GameProvider>
+              <main className="flex-grow place-content-center">
+                <PageContent />
+              </main>
+            </GameProvider>
           </NavProvider>
         </GameModeProvider>
         <Footer />

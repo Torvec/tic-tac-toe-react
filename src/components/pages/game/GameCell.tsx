@@ -1,48 +1,26 @@
-import { useState } from "react";
+// src/components/pages/game/GameCell.tsx
+import { useState, useEffect } from "react";
+import { useGameContext } from "../../hooks/useGameContext";
 
-// type CellProps = {};
+type GameCellProps = {
+  reset: boolean;
+};
 
-export const GameCell = () => {
-  const [value, setValue] = useState("");
+export const GameCell = ({ reset }: GameCellProps) => {
+  const { currentPlayer, setCurrentPlayer, completeReset } = useGameContext();
+  const [cellState, setCellState] = useState<" " | "X" | "O">(" ");
 
-  // const cellStates = {
-  //   EMPTY: (
-  //     <div className="cursor-pointer place-content-center rounded-2xl bg-neutral-400 text-center transition-colors duration-300 ease-in-out hover:bg-neutral-300"></div>
-  //   ),
-  //   X: (
-  //     <div className="cursor-pointer place-content-center rounded-2xl bg-neutral-400 text-center transition-colors duration-300 ease-in-out hover:bg-neutral-300">
-  //       X
-  //     </div>
-  //   ),
-  //   O: (
-  //     <div className="cursor-pointer place-content-center rounded-2xl bg-neutral-400 text-center transition-colors duration-300 ease-in-out hover:bg-neutral-300">
-  //       O
-  //     </div>
-  //   ),
-  //   X_WIN: (
-  //     <div className="cursor-pointer place-content-center rounded-2xl bg-neutral-400 text-center transition-colors duration-300 ease-in-out hover:bg-neutral-300">
-  //       X
-  //     </div>
-  //   ),
-  //   O_WIN: (
-  //     <div className="cursor-pointer place-content-center rounded-2xl bg-neutral-400 text-center transition-colors duration-300 ease-in-out hover:bg-neutral-300">
-  //       O
-  //     </div>
-  //   ),
-  //   DRAW: (
-  //     <div className="cursor-pointer place-content-center rounded-2xl bg-neutral-400 text-center transition-colors duration-300 ease-in-out hover:bg-neutral-300">
-  //       D
-  //     </div>
-  //   ),
-  // };
+  useEffect(() => {
+    if (reset) {
+      setCellState(" ");
+      completeReset();
+    }
+  }, [reset, completeReset]);
 
   const handleClick = () => {
-    if (value === "") {
-      setValue("X");
-    } else if (value === "X") {
-      setValue("O");
-    } else {
-      setValue("");
+    if (cellState === " ") {
+      setCellState(currentPlayer);
+      setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
     }
   };
 
@@ -50,6 +28,8 @@ export const GameCell = () => {
     <div
       className="cursor-pointer place-content-center rounded-2xl bg-neutral-400 text-center transition-colors duration-300 ease-in-out hover:bg-neutral-300"
       onClick={handleClick}
-    >{value}</div>
+    >
+      {cellState}
+    </div>
   );
 };
