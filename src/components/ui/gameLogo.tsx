@@ -1,6 +1,6 @@
-import { useGameStateContext } from "../hooks/useGameStateContext";
+import useGameStateContext from "../hooks/useGameStateContext";
 
-export const GameLogo = () => {
+export default function GameLogo() {
   const letters = ["T", "I", "C", "T", "A", "C", "T", "O", "E"];
   const modes = { classic: "Classic", ultimate: "Ultimate" };
   const { state } = useGameStateContext();

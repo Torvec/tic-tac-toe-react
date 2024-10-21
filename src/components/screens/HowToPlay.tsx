@@ -1,7 +1,7 @@
-import { Button } from "../ui/button";
-import { useGameStateContext } from "../hooks/useGameStateContext";
+import Button from "../ui/button";
+import useGameStateContext from "../hooks/useGameStateContext";
 
-export const HowToPlay = () => {
+export default function HowToPlay() {
   const { dispatch } = useGameStateContext();
 
   return (
@@ -70,4 +70,4 @@ export const HowToPlay = () => {
       </div>
     </>
   );
-};
+}

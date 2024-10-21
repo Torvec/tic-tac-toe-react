@@ -1,4 +1,4 @@
-export const PlayerX = () => {
+export function PlayerX() {
   return (
     <div className="text-center font-mono font-bold uppercase text-blue-700">
       <div className="text-6xl">X</div>
@@ -7,7 +7,7 @@ export const PlayerX = () => {
   );
 };
 
-export const PlayerO = () => {
+export function PlayerO() {
   return (
     <div className="text-center font-mono font-bold uppercase text-red-700">
       <div className="text-6xl">O</div>

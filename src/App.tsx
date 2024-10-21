@@ -1,11 +1,11 @@
 import "./App.css";
-import { useGameStateContext } from "./components/hooks/useGameStateContext";
+import useGameStateContext from "./components/hooks/useGameStateContext";
 import { GameStateProvider } from "./components/contexts/GameStateContext";
-import { Header } from "./components/ui/header";
-import { GameModeSelect } from "./components/screens/GameModeSelect";
-import { HowToPlay } from "./components/screens/HowToPlay";
-import { Game } from "./components/screens/Game";
-import { Footer } from "./components/ui/footer";
+import Header from "./components/ui/header";
+import GameModeSelect from "./components/screens/GameModeSelect";
+import HowToPlay from "./components/screens/HowToPlay";
+import Game from "./components/screens/Game";
+import Footer from "./components/ui/footer";
 
 const Screen = () => {
   const { state } = useGameStateContext();
@@ -21,7 +21,7 @@ const Screen = () => {
   }
 };
 
-export const App = () => {
+export default function App() {
   return (
     <div className="rounded-3xl bg-neutral-200">
       <div className="fullscreen container mx-auto flex flex-col">

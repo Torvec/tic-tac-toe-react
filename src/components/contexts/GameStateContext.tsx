@@ -79,7 +79,7 @@ const initialState: State = {
   reset: false,
 };
 
-export const GameStateProvider = ({ children }: GameStateProviderProps) => {
+export function GameStateProvider({ children }: GameStateProviderProps) {
   const [state, dispatch] = useReducer(gameStateReducer, initialState);
 
   return (
@@ -87,4 +87,4 @@ export const GameStateProvider = ({ children }: GameStateProviderProps) => {
       {children}
     </GameStateContext.Provider>
   );
-};
+}

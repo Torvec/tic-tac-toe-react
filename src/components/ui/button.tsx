@@ -15,7 +15,7 @@ const classNames = {
     "bg-neutral-200 border-2 border-neutral-700 text-neutral-700 rounded-xl py-2 min-w-80 uppercase text-xl font-bold hover:bg-neutral-400 hover:text-white hover:border-neutral-400 hover:transition-all hover:duration-300 hover:ease-in-out",
 };
 
-export const Button = ({ children, type, onClick }: ButtonProps) => {
+export default function Button({ children, type, onClick }: ButtonProps) {
   const className = classNames[type];
 
   return (
@@ -23,4 +23,4 @@ export const Button = ({ children, type, onClick }: ButtonProps) => {
       {children}
     </button>
   );
-};
+}

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { useGameStateContext } from "../hooks/useGameStateContext";
+import Button from "../ui/button";
+import useGameStateContext from "../hooks/useGameStateContext";
 
 type GameCellProps = {
   resetGame: boolean;
 };
 
-const GameCell = ({ resetGame }: GameCellProps) => {
+function GameCell({ resetGame }: GameCellProps) {
   const { state, dispatch } = useGameStateContext();
   const [cellState, setCellState] = useState<" " | "X" | "O">(" ");
 
@@ -34,9 +34,9 @@ const GameCell = ({ resetGame }: GameCellProps) => {
       {cellState}
     </div>
   );
-};
+}
 
-const GameGrid = () => {
+function GameGrid() {
   const { state } = useGameStateContext();
   const { reset } = state;
 
@@ -47,9 +47,9 @@ const GameGrid = () => {
   return (
     <div className="grid h-full grid-cols-3 grid-rows-3 gap-2">{cells}</div>
   );
-};
+}
 
-const GameBoard = () => {
+function GameBoard() {
   const { state, dispatch } = useGameStateContext();
   const { gameMode } = state;
 
@@ -76,9 +76,9 @@ const GameBoard = () => {
       <div className={className}>{grids}</div>
     </div>
   );
-};
+}
 
-const ButtonMenu = () => {
+function ButtonMenu() {
   const { dispatch } = useGameStateContext();
   return (
     <div className="flex justify-center gap-4">
@@ -97,13 +97,13 @@ const ButtonMenu = () => {
       </Button>
     </div>
   );
-};
+}
 
-export const Game = () => {
+export default function Game() {
   return (
     <>
       <GameBoard />
       <ButtonMenu />
     </>
   );
-};
+}

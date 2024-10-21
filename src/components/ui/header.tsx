@@ -1,8 +1,8 @@
-import { GameLogo } from "./gameLogo";
+import GameLogo from "./gameLogo";
 import { PlayerX, PlayerO } from "./playerIndicator";
-import { useGameStateContext } from "../hooks/useGameStateContext";
+import useGameStateContext from "../hooks/useGameStateContext";
 
-export const Header = () => {
+export default function Header() {
   const { state } = useGameStateContext();
   const { gameMode, currentPlayer } = state;
   return (
@@ -32,4 +32,4 @@ export const Header = () => {
       )}
     </>
   );
-};
+}
