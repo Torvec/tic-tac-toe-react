@@ -1,13 +1,13 @@
-import GameLogo from "./gameLogo";
-import { PlayerX, PlayerO } from "./playerIndicator";
+import GameLogo from "./GameLogo";
+import { PlayerX, PlayerO } from "./PlayerIndicator";
 import useGameStateContext from "../hooks/useGameStateContext";
 
 export default function Header() {
   const { state } = useGameStateContext();
-  const { gameMode, currentPlayer } = state;
+  const { currentScreen, currentPlayer } = state;
   return (
     <>
-      {gameMode ? (
+      {currentScreen === "game" ? (
         <header className="mx-auto grid w-1/2 grid-cols-3 grid-rows-1 items-center py-8">
           {currentPlayer === "X" ? (
             <PlayerX />

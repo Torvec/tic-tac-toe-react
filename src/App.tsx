@@ -1,11 +1,11 @@
 import "./App.css";
 import useGameStateContext from "./components/hooks/useGameStateContext";
 import { GameStateProvider } from "./components/contexts/GameStateContext";
-import Header from "./components/ui/header";
+import Header from "./components/ui/Header";
 import GameModeSelect from "./components/screens/GameModeSelect";
 import HowToPlay from "./components/screens/HowToPlay";
 import Game from "./components/screens/Game";
-import Footer from "./components/ui/footer";
+import Footer from "./components/ui/Footer";
 
 const Screen = () => {
   const { state } = useGameStateContext();

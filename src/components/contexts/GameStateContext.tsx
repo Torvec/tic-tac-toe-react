@@ -5,8 +5,9 @@ import { createContext, ReactNode, Dispatch, useReducer } from "react";
 type Screen = "gameModeSelect" | "howToPlay" | "game";
 type GameMode = "classic" | "ultimate" | undefined;
 type Player = "X" | "O";
-type GameGrid = "active" | "inactive" | "X" | "O" | "draw";
-type GameBoard = "play" | "Won" | "Draw";
+type Cell = "X" | "O" | " ";
+type Grid = "active" | "inactive" | "X" | "O" | "draw";
+type Board = "play" | "xWon" | "oWon" | "Draw";
 
 // Game State Context
 
@@ -25,8 +26,9 @@ type State = {
   currentScreen: Screen;
   gameMode: GameMode;
   currentPlayer: Player;
-  gameGridState: GameGrid;
-  gameBoardState: GameBoard;
+  cellValues: Cell[][];
+  gridState: Grid;
+  boardState: Board;
   reset: boolean;
 };
 
@@ -34,8 +36,9 @@ type Action =
   | { type: "setCurrentScreen"; payload: Screen }
   | { type: "setGameMode"; payload: GameMode }
   | { type: "setCurrentPlayer"; payload: Player }
-  | { type: "setGridState"; payload: GameGrid }
-  | { type: "setGameBoardState"; payload: GameBoard }
+  | { type: "setCellValues"; payload: Cell[][] }
+  | { type: "setGridState"; payload: Grid }
+  | { type: "setBoardState"; payload: Board }
   | { type: "triggerReset" }
   | { type: "completeReset" };
 
@@ -47,17 +50,20 @@ function gameStateReducer(state: State, action: Action): State {
       return { ...state, gameMode: action.payload };
     case "setCurrentPlayer":
       return { ...state, currentPlayer: action.payload };
+    case "setCellValues":
+      return { ...state, cellValues: action.payload };
     case "setGridState":
-      return { ...state, gameGridState: action.payload };
-    case "setGameBoardState":
-      return { ...state, gameBoardState: action.payload };
+      return { ...state, gridState: action.payload };
+    case "setBoardState":
+      return { ...state, boardState: action.payload };
     case "triggerReset":
       return {
         ...state,
         reset: true,
         currentPlayer: "X",
-        gameGridState: "active",
-        gameBoardState: "play",
+        gridState: "active",
+        boardState: "play",
+        cellValues: Array.from({ length: 9 }, () => Array(9).fill(" ")),
       };
     case "completeReset":
       return { ...state, reset: false };
@@ -74,8 +80,9 @@ const initialState: State = {
   currentScreen: "gameModeSelect",
   gameMode: undefined,
   currentPlayer: "X",
-  gameGridState: "active",
-  gameBoardState: "play",
+  cellValues: Array.from({ length: 9 }, () => Array(9).fill(" ")),
+  gridState: "active",
+  boardState: "play",
   reset: false,
 };
 
