@@ -4,11 +4,10 @@ import Grid from "./Grid";
 export default function Board() {
   const { state, dispatch } = useGameStateContext();
   const { gameMode, cellValues, currentPlayer } = state;
-  console.log(cellValues);
 
   const handleClick = (gridIndex: number, cellIndex: number) => {
     if (cellValues[gridIndex][cellIndex] !== " ") return;
-
+    
     const newCellValues = cellValues.map((grid, i) => {
       if (i === gridIndex) {
         return grid.map((cell, j) => (j === cellIndex ? currentPlayer : cell));

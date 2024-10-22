@@ -11,10 +11,10 @@ export default function Grid({
   cellValues,
   onCellClick,
 }: GridProps) {
-  const grid = cellValues.map((value, i) => (
+  const grid = cellValues.map((cellValue, i) => (
     <Cell
       key={i}
-      cellValue={value}
+      cellValue={cellValue}
       onCellClick={() => onCellClick(gridIndex, i)}
     />
   ));
