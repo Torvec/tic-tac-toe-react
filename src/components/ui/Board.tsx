@@ -22,17 +22,18 @@ export default function Board() {
     });
   };
 
-  const board = [];
+  let board: JSX.Element[] = [];
   const numOfGrids = gameMode === "classic" ? 1 : 9;
   for (let i = 0; i < numOfGrids; i++) {
-    board.push(
+    board = [
+      ...board,
       <Grid
         key={i}
         gridIndex={i}
         cellValues={cellValues[i]}
         onCellClick={handleClick}
       />,
-    );
+    ];
   }
 
   const className =
