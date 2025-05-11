@@ -1,5 +1,5 @@
-import Button from "../ui/Button";
-import useGameStateContext from "../hooks/useGameStateContext";
+import Button from "../ui/button";
+import useGameStateContext from "../hooks/use-game-state-context";
 
 export default function GameModeSelect() {
   const { dispatch } = useGameStateContext();

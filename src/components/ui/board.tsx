@@ -1,5 +1,5 @@
-import useGameStateContext from "../hooks/useGameStateContext";
-import Grid from "./Grid";
+import useGameStateContext from "../hooks/use-game-state-context";
+import Grid from "./grid";
 
 export default function Board() {
   const { state, dispatch } = useGameStateContext();
@@ -7,7 +7,7 @@ export default function Board() {
 
   const handleClick = (gridIndex: number, cellIndex: number) => {
     if (cellValues[gridIndex][cellIndex] !== " ") return;
-    
+
     const newCellValues = cellValues.map((grid, i) => {
       if (i === gridIndex) {
         return grid.map((cell, j) => (j === cellIndex ? currentPlayer : cell));

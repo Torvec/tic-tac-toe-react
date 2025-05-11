@@ -1,5 +1,5 @@
-import useGameStateContext from "../hooks/useGameStateContext";
-import Button from "./Button";
+import useGameStateContext from "../hooks/use-game-state-context";
+import Button from "./button";
 
 export default function ButtonMenu() {
   const { dispatch } = useGameStateContext();

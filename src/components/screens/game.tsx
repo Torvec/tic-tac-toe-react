@@ -1,5 +1,5 @@
-import Board from "../ui/Board";
-import ButtonMenu from "../ui/ButtonMenu";
+import Board from "../ui/board";
+import ButtonMenu from "../ui/button-menu";
 
 export default function Game() {
   return (

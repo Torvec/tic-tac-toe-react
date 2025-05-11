@@ -1,6 +1,6 @@
-import GameLogo from "./GameLogo";
-import { PlayerX, PlayerO } from "./PlayerIndicator";
-import useGameStateContext from "../hooks/useGameStateContext";
+import GameLogo from "./game-logo";
+import { PlayerX, PlayerO } from "./player-indicator";
+import useGameStateContext from "../hooks/use-game-state-context";
 
 export default function Header() {
   const { state } = useGameStateContext();

@@ -1,4 +1,4 @@
-import useGameStateContext from "../hooks/useGameStateContext";
+import useGameStateContext from "../hooks/use-game-state-context";
 
 export default function GameLogo() {
   const letters = ["T", "I", "C", "T", "A", "C", "T", "O", "E"];
@@ -25,4 +25,4 @@ export default function GameLogo() {
       </div>
     </div>
   );
-};
+}
