@@ -1,7 +1,4 @@
-type CellProps = {
-  cellValue: " " | "X" | "O";
-  onCellClick: () => void;
-};
+import { type CellProps } from "../../types";
 
 export default function Cell({ cellValue, onCellClick }: CellProps) {
   let className;

@@ -1,12 +1,4 @@
-import { ReactNode } from "react";
-
-type ButtonTypes = "large" | "small";
-
-interface ButtonProps {
-  children: ReactNode;
-  type: ButtonTypes;
-  onClick: () => void;
-}
+import { type ButtonProps } from "../../types";
 
 const classNames = {
   large:

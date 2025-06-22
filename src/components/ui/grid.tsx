@@ -1,10 +1,5 @@
 import Cell from "./cell";
-
-type GridProps = {
-  gridIndex: number;
-  cellValues: (" " | "X" | "O")[];
-  onCellClick: (gridIndex: number, cellIndex: number) => void;
-};
+import { type GridProps } from "../../types";
 
 export default function Grid({
   gridIndex,

@@ -1,46 +1,9 @@
-import { createContext, ReactNode, Dispatch, useReducer } from "react";
-
-// All possible types for each game state except for Game Cells
-
-type Screen = "gameModeSelect" | "howToPlay" | "game";
-type GameMode = "classic" | "ultimate" | undefined;
-type Player = "X" | "O";
-type Cell = "X" | "O" | " ";
-type Grid = "active" | "inactive" | "X" | "O" | "draw";
-type Board = "play" | "xWon" | "oWon" | "Draw";
-
-// Game State Context
-
-type GameStateContextType = {
-  state: State;
-  dispatch: Dispatch<Action>;
-};
+import { createContext, ReactNode, useReducer } from "react";
+import { type GameStateContextType, type State, type Action } from "../../types";
 
 export const GameStateContext = createContext<GameStateContextType | undefined>(
   undefined,
 );
-
-// Game State Reducer
-
-type State = {
-  currentScreen: Screen;
-  gameMode: GameMode;
-  currentPlayer: Player;
-  cellValues: Cell[][];
-  gridState: Grid;
-  boardState: Board;
-  reset: boolean;
-};
-
-type Action =
-  | { type: "setCurrentScreen"; payload: Screen }
-  | { type: "setGameMode"; payload: GameMode }
-  | { type: "setCurrentPlayer"; payload: Player }
-  | { type: "setCellValues"; payload: Cell[][] }
-  | { type: "setGridState"; payload: Grid }
-  | { type: "setBoardState"; payload: Board }
-  | { type: "triggerReset" }
-  | { type: "completeReset" };
 
 function gameStateReducer(state: State, action: Action): State {
   switch (action.type) {
@@ -72,10 +35,6 @@ function gameStateReducer(state: State, action: Action): State {
 
 // Game State Provider
 
-type GameStateProviderProps = {
-  children: ReactNode;
-};
-
 const initialState: State = {
   currentScreen: "gameModeSelect",
   gameMode: undefined,
@@ -86,7 +45,7 @@ const initialState: State = {
   reset: false,
 };
 
-export function GameStateProvider({ children }: GameStateProviderProps) {
+export function GameStateProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(gameStateReducer, initialState);
 
   return (
