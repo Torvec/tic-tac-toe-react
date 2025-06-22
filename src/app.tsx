@@ -1,6 +1,6 @@
 import "./app.css";
 import useGameStateContext from "./components/hooks/use-game-state-context";
-import { GameStateProvider } from "./components/contexts/game-state-context";
+import { GameStateProvider } from "./components/providers/game-state-provider";
 import Header from "./components/ui/header";
 import GameModeSelect from "./components/screens/game-mode-select";
 import HowToPlay from "./components/screens/how-to-play";

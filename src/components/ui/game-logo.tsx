@@ -8,7 +8,7 @@ export default function GameLogo() {
 
   return (
     <div>
-      <div className="mx-auto grid size-24 grid-cols-3 grid-rows-3 gap-0.5">
+      <div className="mx-auto grid size-24 grid-cols-3 grid-rows-3 gap-0.5 md:size-32">
         {letters.map((letter, index) => (
           <h1
             key={index}
