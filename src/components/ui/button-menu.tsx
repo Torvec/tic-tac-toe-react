@@ -4,7 +4,7 @@ import Button from "./button";
 export default function ButtonMenu() {
   const { dispatch } = useGameStateContext();
   return (
-    <div className="flex justify-center gap-4">
+    <div className="flex flex-col md:flex-row justify-center gap-4">
       <Button type="small" onClick={() => dispatch({ type: "triggerReset" })}>
         Reset
       </Button>
@@ -14,6 +14,7 @@ export default function ButtonMenu() {
           dispatch({ type: "triggerReset" });
           dispatch({ type: "setCurrentScreen", payload: "gameModeSelect" });
           dispatch({ type: "setCurrentPlayer", payload: "X" });
+          dispatch({ type: "setGameMode", payload: "" });
         }}
       >
         Back

@@ -37,7 +37,7 @@ function gameStateReducer(state: State, action: Action): State {
 
 const initialState: State = {
   currentScreen: "gameModeSelect",
-  gameMode: undefined,
+  gameMode: "",
   currentPlayer: "X",
   cellValues: Array.from({ length: 9 }, () => Array(9).fill(" ")),
   gridState: "active",

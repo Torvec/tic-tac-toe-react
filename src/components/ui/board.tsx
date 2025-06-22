@@ -42,7 +42,7 @@ export default function Board() {
       : "h-full grid grid-cols-3 grid-rows-3 gap-8 p-4";
 
   return (
-    <div className="mx-auto mb-8 aspect-square h-auto w-3/4 rounded-xl bg-neutral-600">
+    <div className="mx-auto mb-8 aspect-square h-auto max-w-5xl w-full rounded-xl bg-neutral-600">
       <div className={className}>{board}</div>
     </div>
   );

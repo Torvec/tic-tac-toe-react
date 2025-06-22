@@ -5,8 +5,8 @@ export default function GameModeSelect() {
   const { dispatch } = useGameStateContext();
 
   return (
-    <>
-      <div className="mb-32 flex justify-center gap-4">
+    <div className="flex flex-col gap-4 md:gap-8">
+      <div className="flex flex-col justify-center gap-2 md:flex-row md:gap-4">
         <Button
           type="large"
           onClick={() => {
@@ -36,6 +36,6 @@ export default function GameModeSelect() {
           How To Play
         </Button>
       </div>
-    </>
+    </div>
   );
 }

@@ -6,8 +6,8 @@ export default function HowToPlay() {
 
   return (
     <>
-      <div className="flex gap-16">
-        <div className="w-1/2">
+      <div className="md:flex md:gap-4">
+        <div className="md:w-1/2">
           <h2 className="mb-4 text-center text-3xl font-black uppercase">
             Classic Mode
           </h2>
@@ -22,7 +22,7 @@ export default function HowToPlay() {
             </li>
           </ul>
         </div>
-        <div className="w-1/2">
+        <div className="md:w-1/2">
           <h2 className="mb-4 text-center text-3xl font-black uppercase">
             Ultimate Mode
           </h2>

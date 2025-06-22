@@ -23,11 +23,11 @@ const Screen = () => {
 
 export default function App() {
   return (
-    <div className="rounded-3xl bg-neutral-200">
-      <div className="fullscreen container mx-auto flex flex-col">
+    <div className="p-4 md:p-8">
+      <div className="fullscreen mx-auto flex flex-col justify-between gap-8 rounded-3xl bg-neutral-200 p-4 md:justify-center md:p-8">
         <GameStateProvider>
           <Header />
-          <main className="flex-grow place-content-center">
+          <main>
             <Screen />
           </main>
         </GameStateProvider>

@@ -8,7 +8,7 @@ export type GameStateContextType = {
 // All possible types for each game state except for Game Cells
 
 export type Screen = "gameModeSelect" | "howToPlay" | "game";
-export type GameMode = "classic" | "ultimate" | undefined;
+export type GameMode = "classic" | "ultimate" | "";
 export type Player = "X" | "O";
 export type Cell = "X" | "O" | " ";
 export type Grid = "active" | "inactive" | "X" | "O" | "draw";
@@ -42,7 +42,7 @@ export type ButtonProps = {
   children: React.ReactNode;
   type: ButtonTypes;
   onClick: () => void;
-}
+};
 
 export type CellProps = {
   cellValue: " " | "X" | "O";
@@ -53,4 +53,9 @@ export type GridProps = {
   gridIndex: number;
   cellValues: (" " | "X" | "O")[];
   onCellClick: (gridIndex: number, cellIndex: number) => void;
+};
+
+export type PlayerIndicatorProps = {
+  player: "X" | "O";
+  opacity: string;
 };
