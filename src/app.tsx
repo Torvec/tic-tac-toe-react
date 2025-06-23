@@ -12,9 +12,9 @@ const Screen = () => {
   const { currentScreen } = state;
 
   switch (currentScreen) {
-    case "gameModeSelect":
+    case "select":
       return <GameModeSelect />;
-    case "howToPlay":
+    case "howTo":
       return <HowToPlay />;
     case "game":
       return <Game />;

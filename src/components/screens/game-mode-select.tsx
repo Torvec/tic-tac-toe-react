@@ -30,7 +30,7 @@ export default function GameModeSelect() {
         <Button
           type="small"
           onClick={() =>
-            dispatch({ type: "setCurrentScreen", payload: "howToPlay" })
+            dispatch({ type: "setCurrentScreen", payload: "howTo" })
           }
         >
           How To Play

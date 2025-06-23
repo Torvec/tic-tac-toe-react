@@ -4,10 +4,10 @@ import useGameStateContext from "../hooks/use-game-state-context";
 
 export default function Header() {
   const { state } = useGameStateContext();
-  const { currentScreen, currentPlayer } = state;
+  const { gameMode, currentPlayer } = state;
   return (
     <>
-      {currentScreen === "game" ? (
+      {gameMode && (
         <header className="mx-auto grid grid-cols-3 grid-rows-1">
           <PlayerIndicator
             player="X"
@@ -19,7 +19,8 @@ export default function Header() {
             opacity={currentPlayer === "O" ? "" : "opacity-50"}
           />
         </header>
-      ) : (
+      )}
+      {!gameMode && (
         <header>
           <GameLogo />
         </header>

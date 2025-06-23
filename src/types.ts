@@ -5,14 +5,14 @@ export type GameStateContextType = {
   dispatch: React.Dispatch<Action>;
 };
 
-// All possible types for each game state except for Game Cells
+// All possible types for each game state
 
-export type Screen = "gameModeSelect" | "howToPlay" | "game";
-export type GameMode = "classic" | "ultimate" | "";
+export type Screen = "select" | "howTo" | "game";
+export type GameMode = null | "classic" | "ultimate";
 export type Player = "X" | "O";
-export type Cell = "X" | "O" | " ";
-export type Grid = "active" | "inactive" | "X" | "O" | "draw";
-export type Board = "play" | "xWon" | "oWon" | "Draw";
+export type Cell = null | Player;
+export type Grid = "enabled" | "disabled" | { won: Player } | "draw";
+export type Board = "play" | { won: Player } | "draw";
 
 // Game State Reducer
 
@@ -36,26 +36,30 @@ export type Action =
   | { type: "triggerReset" }
   | { type: "completeReset" };
 
-type ButtonTypes = "large" | "small";
+// UI COMPONENT PROPS
 
-export type ButtonProps = {
-  children: React.ReactNode;
-  type: ButtonTypes;
-  onClick: () => void;
-};
-
-export type CellProps = {
-  cellValue: " " | "X" | "O";
-  onCellClick: () => void;
+export type PlayerIndicatorProps = {
+  player: Player;
+  opacity: string;
 };
 
 export type GridProps = {
   gridIndex: number;
-  cellValues: (" " | "X" | "O")[];
+  cellValues: Cell[];
   onCellClick: (gridIndex: number, cellIndex: number) => void;
+  gridState: Grid;
+  boardState: Board;
 };
 
-export type PlayerIndicatorProps = {
-  player: "X" | "O";
-  opacity: string;
+export type CellProps = {
+  cellValue: Cell;
+  onCellClick: () => void;
+  gridState: Grid;
+  boardState: Board;
+};
+
+export type ButtonProps = {
+  children: React.ReactNode;
+  type: "large" | "small";
+  onClick: () => void;
 };

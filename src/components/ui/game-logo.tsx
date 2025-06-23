@@ -20,7 +20,7 @@ export default function GameLogo() {
       </div>
       <div>
         <h2 className="text-center text-xl font-bold uppercase tracking-wide text-neutral-600">
-          {gameMode ? modes[gameMode] : ""}
+          {gameMode && modes[gameMode]}
         </h2>
       </div>
     </div>
