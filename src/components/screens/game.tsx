@@ -1,10 +1,10 @@
-import Board from "../ui/board";
+import GameBoard from "../ui/game-board";
 import ButtonMenu from "../ui/button-menu";
 
 export default function Game() {
   return (
     <>
-      <Board />
+      <GameBoard />
       <ButtonMenu />
     </>
   );

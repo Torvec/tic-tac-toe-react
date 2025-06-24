@@ -10,8 +10,7 @@ export default function GameModeSelect() {
         <Button
           type="large"
           onClick={() => {
-            dispatch({ type: "setGameMode", payload: "classic" });
-            dispatch({ type: "setCurrentScreen", payload: "game" });
+            dispatch({ type: "setCurrentScreen", payload: "classic" });
           }}
         >
           Classic <br /> Mode
@@ -19,8 +18,7 @@ export default function GameModeSelect() {
         <Button
           type="large"
           onClick={() => {
-            dispatch({ type: "setGameMode", payload: "ultimate" });
-            dispatch({ type: "setCurrentScreen", payload: "game" });
+            dispatch({ type: "setCurrentScreen", payload: "ultimate" });
           }}
         >
           Ultimate <br /> Mode
@@ -30,7 +28,7 @@ export default function GameModeSelect() {
         <Button
           type="small"
           onClick={() =>
-            dispatch({ type: "setCurrentScreen", payload: "howTo" })
+            dispatch({ type: "setCurrentScreen", payload: "how to play" })
           }
         >
           How To Play

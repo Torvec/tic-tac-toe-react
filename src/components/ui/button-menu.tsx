@@ -13,8 +13,6 @@ export default function ButtonMenu() {
         onClick={() => {
           dispatch({ type: "triggerReset" });
           dispatch({ type: "setCurrentScreen", payload: "select" });
-          dispatch({ type: "setCurrentPlayer", payload: "X" });
-          dispatch({ type: "setGameMode", payload: null });
         }}
       >
         Back

@@ -1,25 +1,8 @@
 import "./app.css";
-import useGameStateContext from "./components/hooks/use-game-state-context";
 import { GameStateProvider } from "./components/providers/game-state-provider";
 import Header from "./components/ui/header";
-import GameModeSelect from "./components/screens/game-mode-select";
-import HowToPlay from "./components/screens/how-to-play";
-import Game from "./components/screens/game";
+import ScreenSelect from "./components/ui/screen-select";
 import Footer from "./components/ui/footer";
-
-const Screen = () => {
-  const { state } = useGameStateContext();
-  const { currentScreen } = state;
-
-  switch (currentScreen) {
-    case "select":
-      return <GameModeSelect />;
-    case "howTo":
-      return <HowToPlay />;
-    case "game":
-      return <Game />;
-  }
-};
 
 export default function App() {
   return (
@@ -28,7 +11,7 @@ export default function App() {
         <GameStateProvider>
           <Header />
           <main>
-            <Screen />
+            <ScreenSelect />
           </main>
         </GameStateProvider>
         <Footer />

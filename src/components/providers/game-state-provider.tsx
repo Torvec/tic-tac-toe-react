@@ -1,22 +1,23 @@
 import { ReactNode, useReducer } from "react";
 import { GameStateContext } from "../contexts/game-state-context";
-import { type State, type Action } from "../../types";
+import { type State, type Action, type Screen } from "../../types";
 
-function getInitialCellValues(gameMode: "classic" | "ultimate" | null) {
-  if (gameMode === "classic") {
-    return [Array(9).fill(null)]; // 1 Grid x 9 Cells
+function getInitialCellValues(currentScreen: Screen) {
+  if (currentScreen === "classic") {
+    return [Array(9).fill("")]; // 1 Grid x 9 Cells
+  } else if (currentScreen === "ultimate") {
+    return Array.from({ length: 9 }, () => Array(9).fill("")); // 9 Grids x 9 Cells
+  } else {
+    return [];
   }
-  return Array.from({ length: 9 }, () => Array(9).fill(null)); // 9 Grids x 9 Cells
 }
 
 function gameStateReducer(state: State, action: Action): State {
   switch (action.type) {
     case "setCurrentScreen":
-      return { ...state, currentScreen: action.payload };
-    case "setGameMode":
       return {
         ...state,
-        gameMode: action.payload,
+        currentScreen: action.payload,
         cellValues: getInitialCellValues(action.payload),
       };
     case "setCurrentPlayer":
@@ -30,25 +31,20 @@ function gameStateReducer(state: State, action: Action): State {
     case "triggerReset":
       return {
         ...state,
-        reset: true,
         currentPlayer: "X",
         gridState: "enabled",
         boardState: "play",
-        cellValues: getInitialCellValues(state.gameMode),
+        cellValues: getInitialCellValues(state.currentScreen),
       };
-    case "completeReset":
-      return { ...state, reset: false };
   }
 }
 
 const initialState: State = {
   currentScreen: "select",
-  gameMode: null,
   currentPlayer: "X",
   cellValues: [],
   gridState: "enabled",
   boardState: "play",
-  reset: false,
 };
 
 export function GameStateProvider({ children }: { children: ReactNode }) {

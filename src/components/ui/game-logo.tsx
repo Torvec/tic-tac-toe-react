@@ -2,9 +2,8 @@ import useGameStateContext from "../hooks/use-game-state-context";
 
 export default function GameLogo() {
   const letters = ["T", "I", "C", "T", "A", "C", "T", "O", "E"];
-  const modes = { classic: "Classic", ultimate: "Ultimate" };
   const { state } = useGameStateContext();
-  const { gameMode } = state;
+  const { currentScreen } = state;
 
   return (
     <div>
@@ -20,7 +19,7 @@ export default function GameLogo() {
       </div>
       <div>
         <h2 className="text-center text-xl font-bold uppercase tracking-wide text-neutral-600">
-          {gameMode && modes[gameMode]}
+          {currentScreen}
         </h2>
       </div>
     </div>
