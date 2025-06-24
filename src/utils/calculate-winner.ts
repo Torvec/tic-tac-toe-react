@@ -1,6 +1,6 @@
-import { type Cell } from "../types";
+import { type Cell, type Grid } from "../types";
 
-export default function calculateWinner(cells: Cell[]) {
+export default function calculateWinner(cells: Cell[] | Grid[]) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],

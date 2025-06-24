@@ -1,7 +1,11 @@
 import useGameStateContext from "../hooks/use-game-state-context";
 import { type GameCellProps } from "../../types";
 
-export default function GameCell({ cellValue, onCellClick }: GameCellProps) {
+export default function GameCell({
+  gridIndex,
+  cellValue,
+  onCellClick,
+}: GameCellProps) {
   const { state } = useGameStateContext();
   const { gridState, boardState } = state;
 
@@ -12,10 +16,10 @@ export default function GameCell({ cellValue, onCellClick }: GameCellProps) {
   };
 
   const isDisabled =
-    gridState === "disabled" ||
-    gridState === "draw" ||
-    gridState === "wonX" ||
-    gridState === "wonO" ||
+    gridState[gridIndex] === "disabled" ||
+    gridState[gridIndex] === "draw" ||
+    gridState[gridIndex] === "wonX" ||
+    gridState[gridIndex] === "wonO" ||
     boardState !== "play";
 
   return (

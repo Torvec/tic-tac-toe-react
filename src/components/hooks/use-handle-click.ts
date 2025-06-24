@@ -3,7 +3,7 @@ import calculateWinner from "../../utils/calculate-winner";
 
 export default function useHandleClick() {
   const { state, dispatch } = useGameStateContext();
-  const { cellValues, currentPlayer } = state;
+  const { gridState, cellValues, currentPlayer, currentScreen } = state;
 
   return (gridIndex: number, cellIndex: number) => {
     // Prevent changing cell value if it is already occupied by X or O
@@ -19,34 +19,56 @@ export default function useHandleClick() {
 
     dispatch({ type: "setCellValues", payload: newCellValues });
 
-    const isGridWon = calculateWinner(newCellValues[gridIndex]);
     const winner = {
       X: "wonX",
       O: "wonO",
     } as const; // treats the values as literal types instead of string types
-    const isGridDraw = newCellValues.every((grid) =>
+
+    const isGridWon = calculateWinner(newCellValues[gridIndex]);
+    const isGridDraw = newCellValues[gridIndex].every((cell) => cell !== "");
+
+    const gridWinners = gridState.map((state) => {
+      if (state === "wonX") return "X";
+      if (state === "wonO") return "O";
+      return "";
+    });
+
+    const isBoardWon = calculateWinner(gridWinners);
+    const isBoardDraw = newCellValues.every((grid) =>
       grid.every((cell) => cell !== ""),
     );
 
     if (isGridWon) {
-      dispatch({ type: "setGridState", payload: winner[currentPlayer] });
-      console.log("winner: " + currentPlayer);
-    } else if (isGridDraw) {
-      dispatch({ type: "setGridState", payload: "draw" });
-      console.log("draw");
-    } else {
+      if (currentScreen === "classic") {
+        dispatch({ type: "setBoardState", payload: winner[currentPlayer] });
+        console.log("game won by " + currentPlayer);
+        return;
+      }
       dispatch({
-        type: "setCurrentPlayer",
-        payload: currentPlayer === "X" ? "O" : "X",
+        type: "setGridState",
+        payload: { gridIndex, state: winner[currentPlayer] },
       });
+      console.log(gridIndex + " winner: " + currentPlayer);
     }
 
-    // Check if winning conditon is met for that grid
+    if (isGridDraw) {
+      dispatch({ type: "setGridState", payload: { gridIndex, state: "draw" } });
+      console.log(gridIndex + " draw");
+    }
 
-    // Check if draw condition is met for that grid
+    if (isBoardWon) {
+      dispatch({ type: "setBoardState", payload: winner[currentPlayer] });
+      console.log("game won by " + currentPlayer);
+    }
 
-    // Check if winning condition is met for game board
+    if (isBoardDraw) {
+      dispatch({ type: "setBoardState", payload: "draw" });
+      console.log("board draw");
+    }
 
-    // Check if draw condition is met for game board
+    dispatch({
+      type: "setCurrentPlayer",
+      payload: currentPlayer === "X" ? "O" : "X",
+    });
   };
 }

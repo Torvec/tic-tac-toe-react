@@ -15,7 +15,7 @@ export type State = {
   currentScreen: Screen;
   currentPlayer: Player;
   cellValues: Cell[][];
-  gridState: Grid;
+  gridState: Grid[];
   boardState: Board;
 };
 
@@ -23,9 +23,9 @@ export type Action =
   | { type: "setCurrentScreen"; payload: Screen }
   | { type: "setCurrentPlayer"; payload: Player }
   | { type: "setCellValues"; payload: Cell[][] }
-  | { type: "setGridState"; payload: Grid }
+  | { type: "setGridState"; payload: { gridIndex: number; state: Grid } }
   | { type: "setBoardState"; payload: Board }
-  | { type: "triggerReset" }
+  | { type: "triggerReset" };
 
 // UI COMPONENT PROPS
 
@@ -39,6 +39,7 @@ export type GameGridProps = {
 };
 
 export type GameCellProps = {
+  gridIndex: number;
   cellValue: Cell;
   onCellClick: () => void;
 };

@@ -17,6 +17,7 @@ export default function GameGrid({ gridIndex }: GameGridProps) {
   const grid = gridCells.map((cellValue, cellIndex) => (
     <GameCell
       key={cellIndex}
+      gridIndex={gridIndex}
       cellValue={cellValue}
       onCellClick={() => handleClick(gridIndex, cellIndex)}
     />
