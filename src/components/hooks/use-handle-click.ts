@@ -41,7 +41,6 @@ export default function useHandleClick() {
     if (isGridWon) {
       if (currentScreen === "classic") {
         dispatch({ type: "setBoardState", payload: winner[currentPlayer] });
-        console.log("game won by " + currentPlayer);
         return;
       }
       dispatch({
@@ -58,12 +57,10 @@ export default function useHandleClick() {
 
     if (isBoardWon) {
       dispatch({ type: "setBoardState", payload: winner[currentPlayer] });
-      console.log("game won by " + currentPlayer);
     }
 
     if (isBoardDraw) {
       dispatch({ type: "setBoardState", payload: "draw" });
-      console.log("board draw");
     }
 
     dispatch({
