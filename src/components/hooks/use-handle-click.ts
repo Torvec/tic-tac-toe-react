@@ -27,6 +27,47 @@ export default function useHandleClick() {
     const isGridWon = calculateWinner(newCellValues[gridIndex]);
     const isGridDraw = newCellValues[gridIndex].every((cell) => cell !== "");
 
+    const nextGridState = [...state.gridState];
+    if (isGridWon) {
+      nextGridState[gridIndex] = winner[currentPlayer];
+    }
+    if (isGridDraw) {
+      nextGridState[gridIndex] = "draw";
+    }
+
+    if (currentScreen === "ultimate") {
+      const nextState = nextGridState[cellIndex];
+      if (
+        nextState === "draw" ||
+        nextState === "wonO" ||
+        nextState === "wonX"
+      ) {
+        nextGridState.forEach((g, i) => {
+          if (g !== "wonX" && g !== "wonO" && g !== "draw") {
+            dispatch({
+              type: "setGridState",
+              payload: { gridIndex: i, state: "enabled" },
+            });
+          }
+        });
+      } else {
+        nextGridState.forEach((g, i) => {
+          if (i !== cellIndex && g !== "wonX" && g !== "wonO" && g !== "draw") {
+            dispatch({
+              type: "setGridState",
+              payload: { gridIndex: i, state: "disabled" },
+            });
+          }
+        });
+        if (nextState === "enabled" || nextState === "disabled") {
+          dispatch({
+            type: "setGridState",
+            payload: { gridIndex: cellIndex, state: "enabled" },
+          });
+        }
+      }
+    }
+
     const gridWinners = gridState.map((state) => {
       if (state === "wonX") return "X";
       if (state === "wonO") return "O";
