@@ -16,9 +16,9 @@ export default function GameCell({
   };
 
   const cellColors = {
-    "": "bg-neutral-500 hover:bg-neutral-300",
-    X: "bg-blue-600 hover:bg-blue-400",
-    O: "bg-red-600 hover:bg-red-400",
+    "": "bg-neutral-500 not-disabled:hover:bg-neutral-300",
+    X: "bg-blue-600 not-disabled:hover:bg-blue-400",
+    O: "bg-red-600 not-disabled:hover:bg-red-400",
   };
 
   const gridStatus = gridState[gridIndex];
