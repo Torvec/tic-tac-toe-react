@@ -6,8 +6,9 @@ export type GameStateContextType = {
 export type Screen = "select" | "how to play" | "classic" | "ultimate";
 export type Player = "X" | "O";
 export type Cell = "" | Player;
-export type Grid = "enabled" | "disabled" | "wonX" | "wonO" | "draw";
-export type Board = "play" | "wonX" | "wonO" | "draw";
+export type Result = "wonX" | "wonO" | "draw";
+export type Grid = "enabled" | "disabled" | Result;
+export type Board = "play" | Result;
 
 // Game State Reducer
 

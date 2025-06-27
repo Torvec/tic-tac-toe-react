@@ -9,11 +9,23 @@ export default function GameCell({
   const { state } = useGameStateContext();
   const { gridState, boardState } = state;
 
-  const colors = {
+  const gridColors = {
+    wonX: "bg-blue-900 text-white",
+    wonO: "bg-red-900 text-white",
+    draw: "bg-neutral-700 text-white",
+  };
+
+  const cellColors = {
     "": "bg-neutral-500 hover:bg-neutral-300",
     X: "bg-blue-600 hover:bg-blue-400",
     O: "bg-red-600 hover:bg-red-400",
   };
+
+  const gridStatus = gridState[gridIndex];
+  const colorClass =
+    gridStatus === "wonX" || gridStatus === "wonO" || gridStatus === "draw"
+      ? gridColors[gridStatus]
+      : cellColors[cellValue];
 
   const isDisabled =
     gridState[gridIndex] === "disabled" ||
@@ -24,7 +36,7 @@ export default function GameCell({
 
   return (
     <button
-      className={`cursor-pointer place-content-center rounded-2xl text-center font-mono text-8xl font-black transition-colors duration-300 ease-in-out disabled:cursor-default disabled:opacity-50 ${colors[cellValue]}`}
+      className={`cursor-pointer place-content-center rounded-2xl text-center font-mono text-8xl font-black transition-colors duration-300 ease-in-out disabled:cursor-default disabled:opacity-50 ${colorClass}`}
       onClick={onCellClick}
       disabled={isDisabled}
     >

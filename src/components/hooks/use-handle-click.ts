@@ -3,9 +3,12 @@ import calculateWinner from "../../utils/calculate-winner";
 
 export default function useHandleClick() {
   const { state, dispatch } = useGameStateContext();
-  const { gridState, cellValues, currentPlayer, currentScreen } = state;
+  const { boardState, gridState, cellValues, currentPlayer, currentScreen } =
+    state;
 
   return (gridIndex: number, cellIndex: number) => {
+    if (boardState !== "play") return;
+    
     // Prevent changing cell value if it is already occupied by X or O
     if (cellValues[gridIndex][cellIndex] !== "") return;
 
@@ -25,15 +28,14 @@ export default function useHandleClick() {
     } as const; // treats the values as literal types instead of string types
 
     const isGridWon = calculateWinner(newCellValues[gridIndex]);
+
     const isGridDraw = newCellValues[gridIndex].every((cell) => cell !== "");
 
-    const nextGridState = [...state.gridState];
-    if (isGridWon) {
-      nextGridState[gridIndex] = winner[currentPlayer];
-    }
-    if (isGridDraw) {
-      nextGridState[gridIndex] = "draw";
-    }
+    const nextGridState = [...gridState];
+
+    if (isGridWon) nextGridState[gridIndex] = winner[currentPlayer];
+
+    if (isGridDraw) nextGridState[gridIndex] = "draw";
 
     if (currentScreen === "ultimate") {
       const nextState = nextGridState[cellIndex];
@@ -68,32 +70,28 @@ export default function useHandleClick() {
       }
     }
 
-    const gridWinners = gridState.map((state) => {
-      if (state === "wonX") return "X";
-      if (state === "wonO") return "O";
-      return "";
-    });
+    const boardWinners = nextGridState.map((g) =>
+      g === "wonX" ? "X" : g === "wonO" ? "O" : "",
+    );
 
-    const isBoardWon = calculateWinner(gridWinners);
+    const isBoardWon = calculateWinner(boardWinners);
+
     const isBoardDraw = newCellValues.every((grid) =>
       grid.every((cell) => cell !== ""),
     );
 
     if (isGridWon) {
-      if (currentScreen === "classic") {
-        dispatch({ type: "setBoardState", payload: winner[currentPlayer] });
-        return;
-      }
       dispatch({
         type: "setGridState",
         payload: { gridIndex, state: winner[currentPlayer] },
       });
-      console.log(gridIndex + " winner: " + currentPlayer);
+      if (currentScreen === "classic") {
+        dispatch({ type: "setBoardState", payload: winner[currentPlayer] });
+      }
     }
 
     if (isGridDraw) {
       dispatch({ type: "setGridState", payload: { gridIndex, state: "draw" } });
-      console.log(gridIndex + " draw");
     }
 
     if (isBoardWon) {
