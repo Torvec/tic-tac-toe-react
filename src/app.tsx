@@ -6,8 +6,8 @@ import Footer from "./components/ui/footer";
 
 export default function App() {
   return (
-    <div className="p-2 md:p-8 space-y-4">
-      <div className="mx-auto flex flex-col gap-8 rounded-3xl bg-neutral-200 px-2 py-8 md:justify-center md:p-8">
+    <div className="space-y-4 px-2 pt-2 md:pt-8">
+      <div className="mx-auto flex max-w-2xl flex-col gap-4 rounded-3xl bg-neutral-200 px-2 py-8 md:aspect-square md:justify-center md:p-8">
         <GameStateProvider>
           <Header />
           <main>

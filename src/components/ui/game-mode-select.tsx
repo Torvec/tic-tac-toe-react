@@ -1,4 +1,4 @@
-import Button from "../ui/button";
+import Button from "./button";
 import useGameStateContext from "../hooks/use-game-state-context";
 
 export default function GameModeSelect() {

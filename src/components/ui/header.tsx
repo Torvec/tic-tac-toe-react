@@ -8,7 +8,7 @@ export default function Header() {
   return (
     <>
       {currentScreen === "classic" || currentScreen === "ultimate" ? (
-        <header className="mx-auto grid grid-cols-3 grid-rows-1">
+        <header className="mx-auto flex justify-between gap-2 md:justify-evenly items-center w-full bg-neutral-300 p-2 rounded-xl">
           <PlayerIndicator
             player="X"
             opacity={currentPlayer === "X" ? "" : "opacity-50"}

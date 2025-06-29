@@ -1,7 +1,7 @@
 import useGameStateContext from "../hooks/use-game-state-context";
 import useHandleClick from "../hooks/use-handle-click";
 import GameCell from "./game-cell";
-import { GameGridProps } from "../../types";
+import { type GameGridProps } from "../../types";
 
 export default function GameGrid({ gridIndex }: GameGridProps) {
   const { state } = useGameStateContext();
@@ -14,7 +14,7 @@ export default function GameGrid({ gridIndex }: GameGridProps) {
     ultimate: "gap-2",
   };
 
-  const grid = gridCells.map((cellValue, cellIndex) => (
+  const gridLayout = gridCells.map((cellValue, cellIndex) => (
     <GameCell
       key={cellIndex}
       gridIndex={gridIndex}
@@ -27,7 +27,7 @@ export default function GameGrid({ gridIndex }: GameGridProps) {
     <div
       className={`grid h-full grid-cols-3 grid-rows-3 ${gridGap[currentScreen as keyof typeof gridGap]}`}
     >
-      {grid}
+      {gridLayout}
     </div>
   );
 }

@@ -7,7 +7,7 @@ export default function GameCell({
   onCellClick,
 }: GameCellProps) {
   const { state } = useGameStateContext();
-  const { gridState, boardState } = state;
+  const { gridState, boardState, currentPlayer } = state;
 
   const gridColors = {
     wonX: "bg-blue-900 text-white",
@@ -15,10 +15,15 @@ export default function GameCell({
     draw: "bg-neutral-700 text-white",
   };
 
+  const cellHoverColors = {
+    X: "not-disabled:hover:bg-blue-500",
+    O: "not-disabled:hover:bg-red-500",
+  };
+
   const cellColors = {
-    "": "bg-neutral-500 not-disabled:hover:bg-neutral-300",
-    X: "bg-blue-600 not-disabled:hover:bg-blue-400",
-    O: "bg-red-600 not-disabled:hover:bg-red-400",
+    "": `bg-neutral-500 ${cellHoverColors[currentPlayer]}`,
+    X: "bg-blue-600",
+    O: "bg-red-600",
   };
 
   const gridStatus = gridState[gridIndex];
@@ -36,7 +41,7 @@ export default function GameCell({
 
   return (
     <button
-      className={`cursor-pointer place-content-center rounded-sm text-center font-mono text-2xl font-bold transition-colors duration-300 ease-in-out disabled:cursor-default disabled:opacity-50 md:rounded-2xl md:text-4xl lg:text-6xl ${colorClass}`}
+      className={`cursor-pointer place-content-center rounded-sm text-center font-mono text-2xl font-bold transition-colors duration-300 ease-in-out disabled:cursor-default disabled:opacity-50 md:rounded-2xl md:text-4xl ${colorClass}`}
       onClick={onCellClick}
       disabled={isDisabled}
     >

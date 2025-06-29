@@ -1,20 +1,20 @@
 export default function Footer() {
   return (
-    <footer className="mx-auto">
+    <footer className="mx-auto w-max">
       <a
-        className="group flex justify-center gap-2 md:gap-4"
+        className="group flex justify-center gap-2"
         href="https://edward-vonschondorf.dev"
       >
         <img
           src="logo_bo.png"
           alt="My EV Logo"
-          className="size-8 self-center transition-transform duration-200 ease-in-out group-hover:-translate-y-1 md:size-10"
+          className="size-8 self-center transition-transform duration-200 ease-in-out group-hover:-translate-y-1"
         />
-        <div className="font-semibold md:text-xl">
-          <span className="block text-neutral-800 transition-colors duration-300 ease-in-out group-hover:text-neutral-600">
+        <div className="font-medium">
+          <span className="block text-neutral-800 transition-colors duration-200 ease-in-out group-hover:text-neutral-500">
             2025 Edward Vonschodorf
           </span>
-          <span className="block text-orange-600 transition-colors duration-300 ease-in-out group-hover:text-orange-500">
+          <span className="block text-orange-600 transition-colors duration-200 ease-in-out group-hover:text-orange-400">
             edward-vonschondorf.dev
           </span>
         </div>
