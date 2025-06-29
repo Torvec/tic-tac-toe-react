@@ -1,4 +1,5 @@
 # Tic Tac Toe in React
+![Screenshot of tic tac toe react game modes](./public/tic_tac_toe_react.jpg)
 What was initially a vanilla javascript project is now a React + TypeScript + Vite + TailwindCSS project. This project is a combination of my two previous Tic Tac Toe projects but made with React instead of vanilla JavaScript and the canvas element. 
 
 My previous projects:
