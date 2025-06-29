@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer className="mx-auto">
       <a
-        className="group flex gap-2 md:gap-4"
+        className="group flex justify-center gap-2 md:gap-4"
         href="https://edward-vonschondorf.dev"
       >
         <img

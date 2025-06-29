@@ -36,7 +36,7 @@ export default function GameCell({
 
   return (
     <button
-      className={`cursor-pointer place-content-center rounded-2xl text-center font-mono text-8xl font-black transition-colors duration-300 ease-in-out disabled:cursor-default disabled:opacity-50 ${colorClass}`}
+      className={`cursor-pointer place-content-center rounded-sm text-center font-mono text-2xl font-bold transition-colors duration-300 ease-in-out disabled:cursor-default disabled:opacity-50 md:rounded-2xl md:text-4xl lg:text-6xl ${colorClass}`}
       onClick={onCellClick}
       disabled={isDisabled}
     >

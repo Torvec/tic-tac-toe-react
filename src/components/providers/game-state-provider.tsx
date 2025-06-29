@@ -1,37 +1,50 @@
-import { ReactNode, useReducer } from "react";
+import { useReducer } from "react";
 import { GameStateContext } from "../contexts/game-state-context";
-import { type State, type Action, type Grid } from "../../types";
+import {
+  type State,
+  type Action,
+  type Grid,
+  type Cell,
+  type GameMode,
+} from "../../types";
 
-const setInitCellValues = {
+const setInitCellValues: Record<GameMode, Cell[][]> = {
   classic: [Array(9).fill("")],
   ultimate: Array.from({ length: 9 }, () => Array(9).fill("")),
 };
 
-const setInitGridState: Record<string, Grid[]> = {
+const setInitGridState: Record<GameMode, Grid[]> = {
   classic: ["enabled"],
-  ultimate: [
-    "disabled",
-    "disabled",
-    "disabled",
-    "disabled",
-    "enabled",
-    "disabled",
-    "disabled",
-    "disabled",
-    "disabled",
-  ],
+  ultimate: Array(9)
+    .fill("disabled")
+    .map((state, i) => (i === 4 ? "enabled" : state)),
+};
+
+const initState: State = {
+  currentScreen: "select",
+  currentPlayer: "X",
+  boardState: "play",
+  gridState: [],
+  cellValues: [],
+};
+
+const updateGridState = (
+  gridState: Grid[],
+  gridIndex: number,
+  newState: Grid,
+): Grid[] => {
+  return gridState.map((g, i) => (i === gridIndex ? newState : g));
 };
 
 function gameStateReducer(state: State, action: Action): State {
+  const { currentScreen, gridState } = state;
   switch (action.type) {
     case "setCurrentScreen":
       return {
         ...state,
         currentScreen: action.payload,
-        cellValues:
-          setInitCellValues[action.payload as keyof typeof setInitCellValues],
-        gridState:
-          setInitGridState[action.payload as keyof typeof setInitGridState],
+        gridState: setInitGridState[action.payload as GameMode],
+        cellValues: setInitCellValues[action.payload as GameMode],
       };
     case "setCurrentPlayer":
       return { ...state, currentPlayer: action.payload };
@@ -40,8 +53,10 @@ function gameStateReducer(state: State, action: Action): State {
     case "setGridState":
       return {
         ...state,
-        gridState: state.gridState.map((g, i) =>
-          i === action.payload.gridIndex ? action.payload.state : g,
+        gridState: updateGridState(
+          gridState,
+          action.payload.gridIndex,
+          action.payload.state,
         ),
       };
     case "setBoardState":
@@ -50,29 +65,19 @@ function gameStateReducer(state: State, action: Action): State {
       return {
         ...state,
         currentPlayer: "X",
-        gridState:
-          setInitGridState[
-            state.currentScreen as keyof typeof setInitGridState
-          ],
         boardState: "play",
-        cellValues:
-          setInitCellValues[
-            state.currentScreen as keyof typeof setInitCellValues
-          ],
+        gridState: setInitGridState[currentScreen as GameMode],
+        cellValues: setInitCellValues[currentScreen as GameMode],
       };
   }
 }
 
-const initialState: State = {
-  currentScreen: "select",
-  currentPlayer: "X",
-  cellValues: [],
-  gridState: [],
-  boardState: "play",
-};
-
-export function GameStateProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(gameStateReducer, initialState);
+export default function GameStateProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [state, dispatch] = useReducer(gameStateReducer, initState);
 
   return (
     <GameStateContext.Provider value={{ state, dispatch }}>

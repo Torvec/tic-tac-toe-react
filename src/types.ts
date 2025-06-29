@@ -3,21 +3,20 @@ export type GameStateContextType = {
   dispatch: React.Dispatch<Action>;
 };
 
-export type Screen = "select" | "how to play" | "classic" | "ultimate";
+export type GameMode = "classic" | "ultimate"
+export type Screen = "select" | "how to play" | GameMode;
 export type Player = "X" | "O";
-export type Cell = "" | Player;
 export type Result = "wonX" | "wonO" | "draw";
+export type Cell = "" | Player;
 export type Grid = "enabled" | "disabled" | Result;
 export type Board = "play" | Result;
-
-// Game State Reducer
 
 export type State = {
   currentScreen: Screen;
   currentPlayer: Player;
-  cellValues: Cell[][];
-  gridState: Grid[];
   boardState: Board;
+  gridState: Grid[];
+  cellValues: Cell[][];
 };
 
 export type Action =
