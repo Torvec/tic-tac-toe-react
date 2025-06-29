@@ -8,7 +8,7 @@ export default function useHandleClick() {
 
   return (gridIndex: number, cellIndex: number) => {
     if (boardState !== "play") return;
-    
+
     // Prevent changing cell value if it is already occupied by X or O
     if (cellValues[gridIndex][cellIndex] !== "") return;
 
@@ -76,9 +76,12 @@ export default function useHandleClick() {
 
     const isBoardWon = calculateWinner(boardWinners);
 
-    const isBoardDraw = newCellValues.every((grid) =>
-      grid.every((cell) => cell !== ""),
-    );
+    const isBoardDraw =
+      currentScreen === "classic"
+        ? newCellValues.every((grid) => grid.every((cell) => cell !== ""))
+        : nextGridState.every(
+            (g) => g === "wonX" || g === "wonO" || g === "draw",
+          );
 
     if (isGridWon) {
       dispatch({
