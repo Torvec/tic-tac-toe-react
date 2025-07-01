@@ -19,7 +19,7 @@ export default function GameBoard() {
   ].map((_, i) => <GameGrid key={i} gridIndex={i} />);
 
   return (
-    <div className="relative z-0 mx-auto mb-4 aspect-square h-auto w-full max-w-5xl rounded-lg bg-neutral-400">
+    <div className="relative z-0 mx-auto mb-4 aspect-square h-auto w-full max-w-5xl bg-neutral-400 md:rounded-b-lg">
       <GameResult />
       <div
         className={gridLayout[currentScreen as keyof typeof gridLayout].style}

@@ -8,7 +8,7 @@ export default function Header() {
   return (
     <>
       {currentScreen === "classic" || currentScreen === "ultimate" ? (
-        <header className="mx-auto flex justify-between gap-2 md:justify-evenly items-center w-full bg-neutral-300 p-2 rounded-xl">
+        <header className="mx-auto flex w-full items-center justify-between gap-2 bg-neutral-300 p-2 md:justify-evenly md:rounded-t-xl">
           <PlayerIndicator
             player="X"
             opacity={currentPlayer === "X" ? "" : "opacity-50"}
@@ -20,7 +20,7 @@ export default function Header() {
           />
         </header>
       ) : (
-        <header>
+        <header className="py-4">
           <GameLogo />
         </header>
       )}
