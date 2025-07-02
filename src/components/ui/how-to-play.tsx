@@ -6,8 +6,8 @@ export default function HowToPlay() {
 
   return (
     <>
-      <div className="mx-auto max-w-2xl">
-        <h2 className="mb-2 text-center text-2xl font-black uppercase">
+      <div className="mx-auto max-w-2xl px-2">
+        <h2 className="mb-2 text-2xl font-black uppercase">
           Classic Mode
         </h2>
         <ul className="mb-8 space-y-2 text-lg">
@@ -20,7 +20,7 @@ export default function HowToPlay() {
             with X's and O's and no win condition is met then it is a draw.
           </li>
         </ul>
-        <h2 className="mb-2 text-center text-2xl font-black uppercase">
+        <h2 className="mb-2 text-2xl font-black uppercase">
           Ultimate Mode
         </h2>
         <ul className="mb-8 space-y-2 text-lg">
