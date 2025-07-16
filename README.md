@@ -13,4 +13,4 @@ My previous projects:
 
 ## Play Now
 
-[Cloudflare Pages Deployment](https://tic-tac-toe-react-9ne.pages.dev/)
+[Cloudflare Workers Deployment](https://tic-tac-toe.edward-vonschondorf.dev/)
